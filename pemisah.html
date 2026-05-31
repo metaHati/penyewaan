@@ -1,0 +1,753 @@
+
+<!-- ============== form penyewaan Media=================== -->
+<section id="formMedia" class="hidden-section min-h-screen py-16 px-6 bg-[#020617]">
+    <div class="max-w-4xl mx-auto glass rounded-3xl shadow-2xl overflow-hidden border border-cyan-500/20"></div>
+     <!-- STEPPER HEADER -->
+      <div class="bg-gradient-to-r from-blue-600 via-cyan-500 to-fuchsia-600 text-white p-8 text-center border-b border-white/10 relative">
+        <button onclick="showSection('alatSection')" class="absolute left-6 top-8 text-white hover:text-cyan-200 flex items-center gap-2 text-sm font-medium">
+          <i class="fa-solid fa-arrow-left-long"></i> Kembali
+        </button>
+        <h2 class="text-3xl font-bold">Form Penyewaan</h2>
+        <p class="mt-2 text-emerald-100">Media Ma'had Aly Amtsilati</p>
+      </div>
+
+      <!-- FORM CONTENT -->
+      <form id="penyewaMedia" class="p-8 space-y-8" onsubmit="event.preventDefault();"> <!-- id="dataPenyewa" -->
+        <!-- BARANG -->
+        <div>
+          <h3 class="text-2xl font-semibold text-white mb-4 flex items-center gap-3">
+            <span class="w-8 h-8 rounded-full bg-cyan-500/15 text-cyan-400 text-sm flex items-center justify-center font-bold">1</span>
+            Aset yang Disewa
+          </h3>
+          <div id="barangMedia" class="bg-slate-900/60 rounded-2xl p-5 space-y-3 text-slate-200 border border-white/5"> <!-- id="hasilBarang" -->
+            <!-- Diisi via JS -->
+          </div>
+        </div>
+
+        <!-- STEP 1: PERSONAL & TIME INFO -->
+        <div id="step1Media"> <!-- id="step1"S -->
+          <!-- DATA -->
+          <div class="space-y-6">
+            <h3 class="text-2xl font-semibold text-white flex items-center gap-3">
+              <span class="w-8 h-8 rounded-full bg-cyan-500/15 text-cyan-400 text-sm flex items-center justify-center font-bold">2</span>
+              Data Penyewa
+            </h3>
+            <div class="grid md:grid-cols-2 gap-5">
+              <div>
+                <label class="block mb-2 font-medium text-slate-300">Nama Lengkap</label>
+                <input id="mediaNama" type="text" class="w-full bg-slate-900/70 border border-cyan-500/20 text-white rounded-xl px-4 py-3 focus:border-cyan-400 focus:ring-2 focus:ring-cyan-500/30 outline-none transition-all" required>
+              </div><!-- id="NamaLengkap" -->
+              <div>
+                <label class="block mb-2 font-medium text-slate-300">Asal Media/Komunitas</label>
+                <input id="mediaAsal" type="text" class="w-full bg-slate-900/70 border border-cyan-500/20 text-white rounded-xl px-4 py-3 focus:border-cyan-400 focus:ring-2 focus:ring-cyan-500/30 outline-none transition-all" required>
+              </div><!-- id="AsalMediaKomunitas" -->
+              <div>
+                <label class="block mb-2 font-medium text-slate-300">Asrama/Departemen</label>
+                <input id="mediaAsrama" type="text" class="w-full bg-slate-900/70 border border-cyan-500/20 text-white rounded-xl px-4 py-3 focus:border-cyan-400 focus:ring-2 focus:ring-cyan-500/30 outline-none transition-all" required>
+              </div><!-- id="AsramaDepartemen" -->
+              <div>
+                <label class="block mb-2 font-medium text-slate-300">No HP Aktif (Hubungkan ke WA)</label>
+                <input id="mediaWA" type="tel" inputmode="numeric" placeholder="08xxxxxxxxxx" class="w-full bg-slate-900/70 border border-cyan-500/20 text-white rounded-xl px-4 py-3 focus:border-cyan-400 focus:ring-2 focus:ring-cyan-500/30 outline-none transition-all" required>
+              </div><!-- id="NoHPAktif" -->
+            </div>
+            <div>
+              <label class="block mb-2 font-medium text-slate-300">Alamat Lengkap</label>
+              <textarea id="mediaAlamat" rows="3" class="w-full bg-slate-900/70 border border-cyan-500/20 text-white rounded-xl px-4 py-3 focus:border-cyan-400 focus:ring-2 focus:ring-cyan-500/30 outline-none transition-all" required></textarea>
+            </div><!-- id="Alamat" -->
+            <!-- INFORMASI KHUSUS MEDIA -->
+            <div class="mt-6">
+              <h4 class="text-lg font-semibold text-white mb-3">Informasi Khusus (Media)</h4>
+              <div class="grid md:grid-cols-2 gap-4">
+                <div>
+                  <label class="block mb-2 text-sm text-slate-300">Nama Project / Judul</label>
+                  <input id="mediaProjectName" type="text" class="w-full bg-slate-900/70 border border-cyan-500/20 text-white rounded-xl px-3 py-2" placeholder="Contoh: Liputan Latihan" />
+                </div>
+                <div>
+                  <label class="block mb-2 text-sm text-slate-300">Level Operator</label>
+                  <select id="mediaOperatorSkill" class="w-full bg-slate-900/70 border border-cyan-500/20 text-white rounded-xl px-3 py-2">
+                    <option value="">Pilih...</option>
+                    <option>Pemula</option>
+                    <option>Menengah</option>
+                    <option>Ahli</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- WAKTU -->
+          <div class="mt-8">
+            <h3 class="text-2xl font-semibold text-white mb-6 flex items-center gap-3">
+              <span class="w-8 h-8 rounded-full bg-cyan-500/15 text-cyan-400 text-sm flex items-center justify-center font-bold">3</span>
+              Waktu Penyewaan
+            </h3>
+            <div class="grid md:grid-cols-2 gap-5">
+              <div>
+                <label class="block mb-2 font-medium text-slate-300">Waktu Ambil</label>
+                <div class="flex gap-2">
+                  <input id="mediaWaktuAmbilDate" type="date" onchange="hitungTotal()" class="w-1/2 bg-slate-900/70 border border-cyan-500/20 text-white rounded-xl px-4 py-3 focus:border-cyan-400 outline-none transition-all">
+                  <input id="mediaWaktuAmbilTime" type="time" onchange="hitungTotal()" class="w-1/2 bg-slate-900/70 border border-cyan-500/20 text-white rounded-xl px-4 py-3 focus:border-cyan-400 outline-none transition-all">
+                </div>
+              </div>
+              <div>
+                <label class="block mb-2 font-medium text-slate-300">Waktu Kembali</label>
+                <div class="flex gap-2">
+                  <input id="mediaWaktuKembaliDate" type="date" onchange="hitungTotal()" class="w-1/2 bg-slate-900/70 border border-cyan-500/20 text-white rounded-xl px-4 py-3 focus:border-cyan-400 outline-none transition-all">
+                  <input id="mediaWaktuKembaliTime" type="time" onchange="hitungTotal()" class="w-1/2 bg-slate-900/70 border border-cyan-500/20 text-white rounded-xl px-4 py-3 focus:border-cyan-400 outline-none transition-all">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TOTAL ESTIMASI -->
+          <div class="glass border border-cyan-500/20 rounded-2xl p-6 mt-8">
+            <div class="flex justify-between items-center flex-wrap gap-4">
+              <div>
+                <h3 class="text-xl font-semibold text-white">Total Estimasi Biaya</h3>
+                <p class="text-slate-400 text-sm mt-1">Estimasi biaya sewa berdasarkan paket aset</p>
+              </div>
+              <div>
+                <div id="mediaDurationJamDisplay" class="text-sm text-slate-400">Durasi: <span id="mediaDurationJam">0</span> jam</div>
+                <div id="mediaTotalHarga" class="text-3xl font-bold text-cyan-400">Rp0</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- BUTTON LANJUT -->
+          <div class="flex justify-end mt-10">
+            <button type="button" onclick="nextStep()" class="w-full bg-blue-600 text-white py-4 rounded-xl hover:bg-blue-700 active:scale-[0.97] border border-white/10 transition-all duration-200 font-semibold text-lg flex items-center justify-center gap-3">
+              Lanjut ke Persetujuan & Aturan <i class="fa-solid fa-circle-check"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- STEP 2: TERMS AND CONDITIONS -->
+        <div id="step2Media" style="display: none;">
+          <!-- id="step2" -->
+           <!-- PERATURAN -->
+          <div class="bg-slate-900/80 border border-amber-500/20 rounded-2xl p-6">
+            <div class="flex items-center gap-3 mb-5">
+              <div class="w-12 h-12 rounded-full bg-amber-500/10 flex items-center justify-center text-2xl text-amber-500">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+              </div>
+              <div>
+                <h3 class="text-2xl font-semibold text-amber-500">PERATURAN & DENDA</h3>
+                <p class="text-slate-400 text-sm mt-1">Mohon dibaca dengan teliti sebelum menyetujui peminjaman</p>
+              </div>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-4 text-slate-300 leading-relaxed">
+              <div class="bg-slate-950 rounded-xl p-4 border border-white/5">
+                <b class="text-amber-400"><i class="fa-solid fa-mosque mr-1.5"></i> 1. Wajib Santri</b>
+                <p class="mt-1 text-sm text-slate-400">Khusus Santri aktif Darul Falah Amtsilati.</p>
+              </div>
+              <div class="bg-slate-950 rounded-xl p-4 border border-white/5">
+                <b class="text-amber-400"><i class="fa-solid fa-circle-nodes mr-1.5"></i> 2. Skill Operator</b>
+                <p class="mt-1 text-sm text-slate-400">Wajib memahami pengoperasian kamera/audio (bukan tahap belajar pemula).</p>
+              </div>
+              <div class="bg-slate-950 rounded-xl p-4 border border-white/5">
+                <b class="text-amber-400"><i class="fa-solid fa-id-card mr-1.5"></i> 3. Jaminan Identitas</b>
+                <p class="mt-1 text-sm text-slate-400">Menyerahkan KTP / KTS / Kartu Mahasiswa asli saat serah terima aset.</p>
+              </div>
+              <div class="bg-slate-950 rounded-xl p-4 border border-white/5">
+                <b class="text-amber-400"><i class="fa-solid fa-clock mr-1.5"></i> 4. Toleransi Waktu</b>
+                <p class="mt-1 text-sm text-slate-400">Keterlambatan maksimal pemulangan adalah 10 Menit.</p>
+              </div>
+              <div class="bg-slate-950 rounded-xl p-4 border border-white/5">
+                <b class="text-amber-400"><i class="fa-solid fa-circle-dollar-to-slot mr-1.5"></i> 5. Denda Telat</b>
+                <p class="mt-1 text-sm text-slate-400">Lewat batas toleransi dikenakan denda Rp10.000 / Jam keterlambatan.</p>
+              </div>
+              <div class="bg-slate-950 rounded-xl p-4 border border-white/5">
+                <b class="text-amber-400"><i class="fa-solid fa-screwdriver-wrench mr-1.5"></i> 6. Kerusakan & Kehilangan</b>
+                <p class="mt-1 text-sm text-slate-400">Kerusakan/kehilangan aset sepenuhnya ditanggung oleh penyewa (ganti unit/perbaikan).</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- KESEPAKATAN -->
+          <div class="glass border border-cyan-500/20 rounded-2xl p-6 mt-8">
+            <h3 class="text-xl font-semibold text-cyan-400 mb-4"><i class="fa-solid fa-file-signature"></i> KESEPAKATAN PENYEWA</h3>
+            <p class="text-slate-300 leading-relaxed italic text-sm">
+              "Dengan mengirimkan format peminjaman ini, saya menyatakan bertanggung jawab penuh atas keamanan fisik aset, sanggup mengoperasikannya secara semestinya, dan siap membayar denda atau biaya ganti rugi sesuai dengan ketentuan resmi yang berlaku."
+            </p>
+            <label class="flex items-start gap-3 mt-6 cursor-pointer select-none">
+              <input type="checkbox" id="agreementMedia" onchange="toggleButton()" class="w-5 h-5 mt-1 accent-cyan-500 cursor-pointer">
+              <span class="text-slate-300 text-sm">Saya menyetujui seluruh ketentuan dan tanggung jawab penyewaan</span>
+            </label>
+          </div>
+
+          <!-- BUTTON STEP 2 -->
+          <div class="flex justify-between mt-10 gap-4 flex-wrap">
+            <button type="button" onclick="prevStep()" class="bg-slate-800 text-white px-8 py-4 rounded-xl hover:bg-slate-700 active:scale-95 border border-white/5 transition duration-200 font-medium">
+              <i class="fa-solid fa-arrow-left"></i> Kembali
+            </button>
+            <button id="mediaSubmit" type="submit" onclick="mediaBooking()" disabled class="bg-slate-700 text-slate-400 px-8 py-4 rounded-xl cursor-not-allowed border border-white/5 transition-all duration-200 font-semibold flex items-center gap-2">
+              Kirim Booking <i class="fa-brands fa-whatsapp text-lg"></i> <!-- id="submitBtn" type="submit" onclick="submitBooking()" disabled -->
+            </button>
+          </div>
+        </div>
+      </form>
+
+</section>
+
+
+<!-- ============== form penyewaan Decoration=================== -->
+<section id="formDecoration" class="hidden-section min-h-screen py-16 px-6 bg-[#020617]">
+    <div class="max-w-4xl mx-auto glass rounded-3xl shadow-2xl overflow-hidden border border-cyan-500/20"></div>
+     <!-- STEPPER HEADER -->
+      <div class="bg-gradient-to-r from-blue-600 via-cyan-500 to-fuchsia-600 text-white p-8 text-center border-b border-white/10 relative">
+        <button onclick="showSection('alatSection')" class="absolute left-6 top-8 text-white hover:text-cyan-200 flex items-center gap-2 text-sm font-medium">
+          <i class="fa-solid fa-arrow-left-long"></i> Kembali
+        </button>
+        <h2 class="text-3xl font-bold">Form Penyewaan</h2>
+        <p class="mt-2 text-emerald-100">Decoration Ma'had Aly Amtsilati</p>
+      </div>
+
+      <!-- FORM CONTENT -->
+      <form id="penyewaDecoration" class="p-8 space-y-8" onsubmit="event.preventDefault();"> <!-- id="dataPenyewa" -->
+        <!-- BARANG -->
+        <div>
+          <h3 class="text-2xl font-semibold text-white mb-4 flex items-center gap-3">
+            <span class="w-8 h-8 rounded-full bg-cyan-500/15 text-cyan-400 text-sm flex items-center justify-center font-bold">1</span>
+            Aset yang Disewa
+          </h3>
+          <div id="barangDecoration" class="bg-slate-900/60 rounded-2xl p-5 space-y-3 text-slate-200 border border-white/5"> <!-- id="hasilBarang" -->
+            <!-- Diisi via JS -->
+          </div>
+        </div>
+
+        <!-- STEP 1: PERSONAL & TIME INFO -->
+        <div id="step1Decoration"> <!-- id="step1" -->
+          <!-- DATA -->
+          <div class="space-y-6">
+            <h3 class="text-2xl font-semibold text-white flex items-center gap-3">
+              <span class="w-8 h-8 rounded-full bg-cyan-500/15 text-cyan-400 text-sm flex items-center justify-center font-bold">2</span>
+              Data Penyewa
+            </h3>
+            <div class="grid md:grid-cols-2 gap-5">
+              <div>
+                <label class="block mb-2 font-medium text-slate-300">Nama Lengkap</label>
+                <input id="decorationNama" type="text" class="w-full bg-slate-900/70 border border-cyan-500/20 text-white rounded-xl px-4 py-3 focus:border-cyan-400 focus:ring-2 focus:ring-cyan-500/30 outline-none transition-all" required>
+              </div><!-- id="NamaLengkap" -->
+              <div>
+                <label class="block mb-2 font-medium text-slate-300">Asal Media/Komunitas</label>
+                <input id="decorationAsal" type="text" class="w-full bg-slate-900/70 border border-cyan-500/20 text-white rounded-xl px-4 py-3 focus:border-cyan-400 focus:ring-2 focus:ring-cyan-500/30 outline-none transition-all" required>
+              </div><!-- id="AsalMediaKomunitas" -->
+              <div>
+                <label class="block mb-2 font-medium text-slate-300">Asrama/Departemen</label>
+                <input id="decorationAsrama" type="text" class="w-full bg-slate-900/70 border border-cyan-500/20 text-white rounded-xl px-4 py-3 focus:border-cyan-400 focus:ring-2 focus:ring-cyan-500/30 outline-none transition-all" required>
+              </div><!-- id="AsramaDepartemen" -->
+              <div>
+                <label class="block mb-2 font-medium text-slate-300">No HP Aktif (Hubungkan ke WA)</label>
+                <input id="decorationWA" type="tel" inputmode="numeric" placeholder="08xxxxxxxxxx" class="w-full bg-slate-900/70 border border-cyan-500/20 text-white rounded-xl px-4 py-3 focus:border-cyan-400 focus:ring-2 focus:ring-cyan-500/30 outline-none transition-all" required>
+              </div><!-- id="NoHPAktif" -->
+            </div>
+            <div>
+              <label class="block mb-2 font-medium text-slate-300">Alamat Lengkap</label>
+              <textarea id="decorationAlamat" rows="3" class="w-full bg-slate-900/70 border border-cyan-500/20 text-white rounded-xl px-4 py-3 focus:border-cyan-400 focus:ring-2 focus:ring-cyan-500/30 outline-none transition-all" required></textarea>
+            </div><!-- id="Alamat" -->
+            <!-- INFORMASI KHUSUS DECORATION -->
+            <div class="mt-6">
+              <h4 class="text-lg font-semibold text-white mb-3">Informasi Khusus (Decoration)</h4>
+              <div class="grid md:grid-cols-2 gap-4">
+                <div>
+                  <label class="block mb-2 text-sm text-slate-300">Tipe Acara</label>
+                  <input id="decorationEventType" type="text" class="w-full bg-slate-900/70 border border-cyan-500/20 text-white rounded-xl px-3 py-2" placeholder="Contoh: Pengajian, Wisuda" />
+                </div>
+                <div>
+                  <label class="block mb-2 text-sm text-slate-300">Luas Area (m²)</label>
+                  <input id="decorationAreaSize" type="number" min="0" class="w-full bg-slate-900/70 border border-cyan-500/20 text-white rounded-xl px-3 py-2" placeholder="Contoh: 50" />
+                </div>
+              </div>
+              <label class="flex items-center gap-3 mt-3 text-slate-300">
+                <input id="decorationNeedSetup" type="checkbox" class="accent-cyan-500" />
+                <span class="text-sm">Butuh layanan pemasangan dekorasi</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- WAKTU -->
+          <div class="mt-8">
+            <h3 class="text-2xl font-semibold text-white mb-6 flex items-center gap-3">
+              <span class="w-8 h-8 rounded-full bg-cyan-500/15 text-cyan-400 text-sm flex items-center justify-center font-bold">3</span>
+              Waktu Penyewaan
+            </h3>
+            <div class="grid md:grid-cols-2 gap-5">
+              <div>
+                <label class="block mb-2 font-medium text-slate-300">Waktu Ambil</label>
+                <div class="flex gap-2">
+                  <input id="decorationWaktuAmbilDate" type="date" onchange="hitungTotal()" class="w-1/2 bg-slate-900/70 border border-cyan-500/20 text-white rounded-xl px-4 py-3 focus:border-cyan-400 outline-none transition-all">
+                  <input id="decorationWaktuAmbilTime" type="time" onchange="hitungTotal()" class="w-1/2 bg-slate-900/70 border border-cyan-500/20 text-white rounded-xl px-4 py-3 focus:border-cyan-400 outline-none transition-all">
+                </div>
+              </div>
+              <div>
+                <label class="block mb-2 font-medium text-slate-300">Waktu Kembali</label>
+                <div class="flex gap-2">
+                  <input id="decorationWaktuKembaliDate" type="date" onchange="hitungTotal()" class="w-1/2 bg-slate-900/70 border border-cyan-500/20 text-white rounded-xl px-4 py-3 focus:border-cyan-400 outline-none transition-all">
+                  <input id="decorationWaktuKembaliTime" type="time" onchange="hitungTotal()" class="w-1/2 bg-slate-900/70 border border-cyan-500/20 text-white rounded-xl px-4 py-3 focus:border-cyan-400 outline-none transition-all">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TOTAL ESTIMASI -->
+          <div class="glass border border-cyan-500/20 rounded-2xl p-6 mt-8">
+            <div class="flex justify-between items-center flex-wrap gap-4">
+              <div>
+                <h3 class="text-xl font-semibold text-white">Total Estimasi Biaya</h3>
+                <p class="text-slate-400 text-sm mt-1">Estimasi biaya sewa berdasarkan paket aset</p>
+              </div>
+              <div>
+                <div id="decorationDurationJamDisplay" class="text-sm text-slate-400">Durasi: <span id="decorationDurationJam">0</span> jam</div>
+                <div id="decorationTotalHarga" class="text-3xl font-bold text-cyan-400">Rp0</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- BUTTON LANJUT -->
+          <div class="flex justify-end mt-10">
+            <button type="button" onclick="nextStep()" class="w-full bg-blue-600 text-white py-4 rounded-xl hover:bg-blue-700 active:scale-[0.97] border border-white/10 transition-all duration-200 font-semibold text-lg flex items-center justify-center gap-3">
+              Lanjut ke Persetujuan & Aturan <i class="fa-solid fa-circle-check"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- STEP 2: TERMS AND CONDITIONS -->
+        <div id="step2Decoration" style="display: none;">
+          <!-- id="step2" -->
+           <!-- PERATURAN -->
+          <div class="bg-slate-900/80 border border-amber-500/20 rounded-2xl p-6">
+            <div class="flex items-center gap-3 mb-5">
+              <div class="w-12 h-12 rounded-full bg-amber-500/10 flex items-center justify-center text-2xl text-amber-500">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+              </div>
+              <div>
+                <h3 class="text-2xl font-semibold text-amber-500">PERATURAN & DENDA</h3>
+                <p class="text-slate-400 text-sm mt-1">Mohon dibaca dengan teliti sebelum menyetujui peminjaman</p>
+              </div>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-4 text-slate-300 leading-relaxed">
+              <div class="bg-slate-950 rounded-xl p-4 border border-white/5">
+                <b class="text-amber-400"><i class="fa-solid fa-mosque mr-1.5"></i> 1. Wajib Santri</b>
+                <p class="mt-1 text-sm text-slate-400">Khusus Santri aktif Darul Falah Amtsilati.</p>
+              </div>
+              <div class="bg-slate-950 rounded-xl p-4 border border-white/5">
+                <b class="text-amber-400"><i class="fa-solid fa-circle-nodes mr-1.5"></i> 2. Skill Operator</b>
+                <p class="mt-1 text-sm text-slate-400">Wajib memahami pengoperasian kamera/audio (bukan tahap belajar pemula).</p>
+              </div>
+              <div class="bg-slate-950 rounded-xl p-4 border border-white/5">
+                <b class="text-amber-400"><i class="fa-solid fa-id-card mr-1.5"></i> 3. Jaminan Identitas</b>
+                <p class="mt-1 text-sm text-slate-400">Menyerahkan KTP / KTS / Kartu Mahasiswa asli saat serah terima aset.</p>
+              </div>
+              <div class="bg-slate-950 rounded-xl p-4 border border-white/5">
+                <b class="text-amber-400"><i class="fa-solid fa-clock mr-1.5"></i> 4. Toleransi Waktu</b>
+                <p class="mt-1 text-sm text-slate-400">Keterlambatan maksimal pemulangan adalah 10 Menit.</p>
+              </div>
+              <div class="bg-slate-950 rounded-xl p-4 border border-white/5">
+                <b class="text-amber-400"><i class="fa-solid fa-circle-dollar-to-slot mr-1.5"></i> 5. Denda Telat</b>
+                <p class="mt-1 text-sm text-slate-400">Lewat batas toleransi dikenakan denda Rp10.000 / Jam keterlambatan.</p>
+              </div>
+              <div class="bg-slate-950 rounded-xl p-4 border border-white/5">
+                <b class="text-amber-400"><i class="fa-solid fa-screwdriver-wrench mr-1.5"></i> 6. Kerusakan & Kehilangan</b>
+                <p class="mt-1 text-sm text-slate-400">Kerusakan/kehilangan aset sepenuhnya ditanggung oleh penyewa (ganti unit/perbaikan).</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- KESEPAKATAN -->
+          <div class="glass border border-cyan-500/20 rounded-2xl p-6 mt-8">
+            <h3 class="text-xl font-semibold text-cyan-400 mb-4"><i class="fa-solid fa-file-signature"></i> KESEPAKATAN PENYEWA</h3>
+            <p class="text-slate-300 leading-relaxed italic text-sm">
+              "Dengan mengirimkan format peminjaman ini, saya menyatakan bertanggung jawab penuh atas keamanan fisik aset, sanggup mengoperasikannya secara semestinya, dan siap membayar denda atau biaya ganti rugi sesuai dengan ketentuan resmi yang berlaku."
+            </p>
+            <label class="flex items-start gap-3 mt-6 cursor-pointer select-none">
+              <input type="checkbox" id="agreementDecoration" onchange="toggleButton()" class="w-5 h-5 mt-1 accent-cyan-500 cursor-pointer">
+              <span class="text-slate-300 text-sm">Saya menyetujui seluruh ketentuan dan tanggung jawab penyewaan</span>
+            </label>
+          </div>
+
+          <!-- BUTTON STEP 2 -->
+          <div class="flex justify-between mt-10 gap-4 flex-wrap">
+            <button type="button" onclick="prevStep()" class="bg-slate-800 text-white px-8 py-4 rounded-xl hover:bg-slate-700 active:scale-95 border border-white/5 transition duration-200 font-medium">
+              <i class="fa-solid fa-arrow-left"></i> Kembali
+            </button>
+            <button id="decorationSubmit" type="submit" onclick="decorationBooking()" disabled class="bg-slate-700 text-slate-400 px-8 py-4 rounded-xl cursor-not-allowed border border-white/5 transition-all duration-200 font-semibold flex items-center gap-2">
+              Kirim Booking <i class="fa-brands fa-whatsapp text-lg"></i> <!-- id="submitBtn" type="submit" onclick="submitBooking()" disabled -->
+            </button>
+          </div>
+        </div>
+      </form>
+
+</section>
+
+
+<!-- ============== form penyewaan Properti=================== -->
+<section id="formProperti" class="hidden-section min-h-screen py-16 px-6 bg-[#020617]">
+    <div class="max-w-4xl mx-auto glass rounded-3xl shadow-2xl overflow-hidden border border-cyan-500/20"></div>
+     <!-- STEPPER HEADER -->
+      <div class="bg-gradient-to-r from-blue-600 via-cyan-500 to-fuchsia-600 text-white p-8 text-center border-b border-white/10 relative">
+        <button onclick="showSection('alatSection')" class="absolute left-6 top-8 text-white hover:text-cyan-200 flex items-center gap-2 text-sm font-medium">
+          <i class="fa-solid fa-arrow-left-long"></i> Kembali
+        </button>
+        <h2 class="text-3xl font-bold">Form Penyewaan</h2>
+        <p class="mt-2 text-emerald-100">Properti Ma'had Aly Amtsilati</p>
+      </div>
+
+      <!-- FORM CONTENT -->
+      <form id="penyewaProperti" class="p-8 space-y-8" onsubmit="event.preventDefault();"> <!-- id="dataPenyewa" -->
+        <!-- BARANG -->
+        <div>
+          <h3 class="text-2xl font-semibold text-white mb-4 flex items-center gap-3">
+            <span class="w-8 h-8 rounded-full bg-cyan-500/15 text-cyan-400 text-sm flex items-center justify-center font-bold">1</span>
+            Aset yang Disewa
+          </h3>
+          <div id="barangProperti" class="bg-slate-900/60 rounded-2xl p-5 space-y-3 text-slate-200 border border-white/5"> <!-- id="hasilBarang" -->
+            <!-- Diisi via JS -->
+          </div>
+        </div>
+
+        <!-- STEP 1: PERSONAL & TIME INFO -->
+        <div id="step1Properti"> <!-- id="step1" -->
+          <!-- DATA -->
+          <div class="space-y-6">
+            <h3 class="text-2xl font-semibold text-white flex items-center gap-3">
+              <span class="w-8 h-8 rounded-full bg-cyan-500/15 text-cyan-400 text-sm flex items-center justify-center font-bold">2</span>
+              Data Penyewa
+            </h3>
+            <div class="grid md:grid-cols-2 gap-5">
+              <div>
+                <label class="block mb-2 font-medium text-slate-300">Nama Lengkap</label>
+                <input id="propertiNama" type="text" class="w-full bg-slate-900/70 border border-cyan-500/20 text-white rounded-xl px-4 py-3 focus:border-cyan-400 focus:ring-2 focus:ring-cyan-500/30 outline-none transition-all" required>
+              </div><!-- id="NamaLengkap" -->
+              <div>
+                <label class="block mb-2 font-medium text-slate-300">Asal Media/Komunitas</label>
+                <input id="propertiAsal" type="text" class="w-full bg-slate-900/70 border border-cyan-500/20 text-white rounded-xl px-4 py-3 focus:border-cyan-400 focus:ring-2 focus:ring-cyan-500/30 outline-none transition-all" required>
+              </div><!-- id="AsalMediaKomunitas" -->
+              <div>
+                <label class="block mb-2 font-medium text-slate-300">Asrama/Departemen</label>
+                <input id="propertiAsrama" type="text" class="w-full bg-slate-900/70 border border-cyan-500/20 text-white rounded-xl px-4 py-3 focus:border-cyan-400 focus:ring-2 focus:ring-cyan-500/30 outline-none transition-all" required>
+              </div><!-- id="AsramaDepartemen" -->
+              <div>
+                <label class="block mb-2 font-medium text-slate-300">No HP Aktif (Hubungkan ke WA)</label>
+                <input id="propertiWA" type="tel" inputmode="numeric" placeholder="08xxxxxxxxxx" class="w-full bg-slate-900/70 border border-cyan-500/20 text-white rounded-xl px-4 py-3 focus:border-cyan-400 focus:ring-2 focus:ring-cyan-500/30 outline-none transition-all" required>
+              </div><!-- id="NoHPAktif" -->
+            </div>
+            <div>
+              <label class="block mb-2 font-medium text-slate-300">Alamat Lengkap</label>
+              <textarea id="propertiAlamat" rows="3" class="w-full bg-slate-900/70 border border-cyan-500/20 text-white rounded-xl px-4 py-3 focus:border-cyan-400 focus:ring-2 focus:ring-cyan-500/30 outline-none transition-all" required></textarea>
+            </div><!-- id="Alamat" -->
+            <!-- INFORMASI KHUSUS PROPERTI -->
+            <div class="mt-6">
+              <h4 class="text-lg font-semibold text-white mb-3">Informasi Khusus (Properti)</h4>
+              <div class="grid md:grid-cols-2 gap-4">
+                <div>
+                  <label class="block mb-2 text-sm text-slate-300">Kegunaan Properti</label>
+                  <input id="propertiUsage" type="text" class="w-full bg-slate-900/70 border border-cyan-500/20 text-white rounded-xl px-3 py-2" placeholder="Contoh: Properti Panggung" />
+                </div>
+                <div>
+                  <label class="block mb-2 text-sm text-slate-300">Jumlah Unit</label>
+                  <input id="propertiCount" type="number" min="1" class="w-full bg-slate-900/70 border border-cyan-500/20 text-white rounded-xl px-3 py-2" placeholder="Contoh: 3" />
+                </div>
+              </div>
+              <label class="flex items-center gap-3 mt-3 text-slate-300">
+                <input id="propertiNeedDelivery" type="checkbox" class="accent-cyan-500" />
+                <span class="text-sm">Butuh pengiriman / antar barang</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- WAKTU -->
+          <div class="mt-8">
+            <h3 class="text-2xl font-semibold text-white mb-6 flex items-center gap-3">
+              <span class="w-8 h-8 rounded-full bg-cyan-500/15 text-cyan-400 text-sm flex items-center justify-center font-bold">3</span>
+              Waktu Penyewaan
+            </h3>
+            <div class="grid md:grid-cols-2 gap-5">
+              <div>
+                <label class="block mb-2 font-medium text-slate-300">Waktu Ambil</label>
+                <div class="flex gap-2">
+                  <input id="propertiWaktuAmbilDate" type="date" onchange="hitungTotal()" class="w-1/2 bg-slate-900/70 border border-cyan-500/20 text-white rounded-xl px-4 py-3 focus:border-cyan-400 outline-none transition-all">
+                  <input id="propertiWaktuAmbilTime" type="time" onchange="hitungTotal()" class="w-1/2 bg-slate-900/70 border border-cyan-500/20 text-white rounded-xl px-4 py-3 focus:border-cyan-400 outline-none transition-all">
+                </div>
+              </div>
+              <div>
+                <label class="block mb-2 font-medium text-slate-300">Waktu Kembali</label>
+                <div class="flex gap-2">
+                  <input id="propertiWaktuKembaliDate" type="date" onchange="hitungTotal()" class="w-1/2 bg-slate-900/70 border border-cyan-500/20 text-white rounded-xl px-4 py-3 focus:border-cyan-400 outline-none transition-all">
+                  <input id="propertiWaktuKembaliTime" type="time" onchange="hitungTotal()" class="w-1/2 bg-slate-900/70 border border-cyan-500/20 text-white rounded-xl px-4 py-3 focus:border-cyan-400 outline-none transition-all">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TOTAL ESTIMASI -->
+          <div class="glass border border-cyan-500/20 rounded-2xl p-6 mt-8">
+            <div class="flex justify-between items-center flex-wrap gap-4">
+              <div>
+                <h3 class="text-xl font-semibold text-white">Total Estimasi Biaya</h3>
+                <p class="text-slate-400 text-sm mt-1">Estimasi biaya sewa berdasarkan paket aset</p>
+              </div>
+              <div>
+                <div id="propertiDurationJamDisplay" class="text-sm text-slate-400">Durasi: <span id="propertiDurationJam">0</span> jam</div>
+                <div id="propertiTotalHarga" class="text-3xl font-bold text-cyan-400">Rp0</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- BUTTON LANJUT -->
+          <div class="flex justify-end mt-10">
+            <button type="button" onclick="nextStep()" class="w-full bg-blue-600 text-white py-4 rounded-xl hover:bg-blue-700 active:scale-[0.97] border border-white/10 transition-all duration-200 font-semibold text-lg flex items-center justify-center gap-3">
+              Lanjut ke Persetujuan & Aturan <i class="fa-solid fa-circle-check"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- STEP 2: TERMS AND CONDITIONS -->
+        <div id="step2Properti" style="display: none;">
+          <!-- id="step2" -->
+           <!-- PERATURAN -->
+          <div class="bg-slate-900/80 border border-amber-500/20 rounded-2xl p-6">
+            <div class="flex items-center gap-3 mb-5">
+              <div class="w-12 h-12 rounded-full bg-amber-500/10 flex items-center justify-center text-2xl text-amber-500">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+              </div>
+              <div>
+                <h3 class="text-2xl font-semibold text-amber-500">PERATURAN & DENDA</h3>
+                <p class="text-slate-400 text-sm mt-1">Mohon dibaca dengan teliti sebelum menyetujui peminjaman</p>
+              </div>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-4 text-slate-300 leading-relaxed">
+              <div class="bg-slate-950 rounded-xl p-4 border border-white/5">
+                <b class="text-amber-400"><i class="fa-solid fa-mosque mr-1.5"></i> 1. Wajib Santri</b>
+                <p class="mt-1 text-sm text-slate-400">Khusus Santri aktif Darul Falah Amtsilati.</p>
+              </div>
+              <div class="bg-slate-950 rounded-xl p-4 border border-white/5">
+                <b class="text-amber-400"><i class="fa-solid fa-circle-nodes mr-1.5"></i> 2. Skill Operator</b>
+                <p class="mt-1 text-sm text-slate-400">Wajib memahami pengoperasian kamera/audio (bukan tahap belajar pemula).</p>
+              </div>
+              <div class="bg-slate-950 rounded-xl p-4 border border-white/5">
+                <b class="text-amber-400"><i class="fa-solid fa-id-card mr-1.5"></i> 3. Jaminan Identitas</b>
+                <p class="mt-1 text-sm text-slate-400">Menyerahkan KTP / KTS / Kartu Mahasiswa asli saat serah terima aset.</p>
+              </div>
+              <div class="bg-slate-950 rounded-xl p-4 border border-white/5">
+                <b class="text-amber-400"><i class="fa-solid fa-clock mr-1.5"></i> 4. Toleransi Waktu</b>
+                <p class="mt-1 text-sm text-slate-400">Keterlambatan maksimal pemulangan adalah 10 Menit.</p>
+              </div>
+              <div class="bg-slate-950 rounded-xl p-4 border border-white/5">
+                <b class="text-amber-400"><i class="fa-solid fa-circle-dollar-to-slot mr-1.5"></i> 5. Denda Telat</b>
+                <p class="mt-1 text-sm text-slate-400">Lewat batas toleransi dikenakan denda Rp10.000 / Jam keterlambatan.</p>
+              </div>
+              <div class="bg-slate-950 rounded-xl p-4 border border-white/5">
+                <b class="text-amber-400"><i class="fa-solid fa-screwdriver-wrench mr-1.5"></i> 6. Kerusakan & Kehilangan</b>
+                <p class="mt-1 text-sm text-slate-400">Kerusakan/kehilangan aset sepenuhnya ditanggung oleh penyewa (ganti unit/perbaikan).</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- KESEPAKATAN -->
+          <div class="glass border border-cyan-500/20 rounded-2xl p-6 mt-8">
+            <h3 class="text-xl font-semibold text-cyan-400 mb-4"><i class="fa-solid fa-file-signature"></i> KESEPAKATAN PENYEWA</h3>
+            <p class="text-slate-300 leading-relaxed italic text-sm">
+              "Dengan mengirimkan format peminjaman ini, saya menyatakan bertanggung jawab penuh atas keamanan fisik aset, sanggup mengoperasikannya secara semestinya, dan siap membayar denda atau biaya ganti rugi sesuai dengan ketentuan resmi yang berlaku."
+            </p>
+            <label class="flex items-start gap-3 mt-6 cursor-pointer select-none">
+              <input type="checkbox" id="agreementProperti" onchange="toggleButton()" class="w-5 h-5 mt-1 accent-cyan-500 cursor-pointer">
+              <span class="text-slate-300 text-sm">Saya menyetujui seluruh ketentuan dan tanggung jawab penyewaan</span>
+            </label>
+          </div>
+
+          <!-- BUTTON STEP 2 -->
+          <div class="flex justify-between mt-10 gap-4 flex-wrap">
+            <button type="button" onclick="prevStep()" class="bg-slate-800 text-white px-8 py-4 rounded-xl hover:bg-slate-700 active:scale-95 border border-white/5 transition duration-200 font-medium">
+              <i class="fa-solid fa-arrow-left"></i> Kembali
+            </button>
+            <button id="propertiSubmit" type="submit" onclick="propertiBooking()" disabled class="bg-slate-700 text-slate-400 px-8 py-4 rounded-xl cursor-not-allowed border border-white/5 transition-all duration-200 font-semibold flex items-center gap-2">
+              Kirim Booking <i class="fa-brands fa-whatsapp text-lg"></i> <!-- id="submitBtn" type="submit" onclick="submitBooking()" disabled -->
+            </button>
+          </div>
+        </div>
+      </form>
+
+</section>
+
+
+<!-- ============== form penyewaan lainnya=================== -->
+<section id="formLainnya" class="hidden-section min-h-screen py-16 px-6 bg-[#020617]">
+    <div class="max-w-4xl mx-auto glass rounded-3xl shadow-2xl overflow-hidden border border-cyan-500/20"></div>
+     <!-- STEPPER HEADER -->
+      <div class="bg-gradient-to-r from-blue-600 via-cyan-500 to-fuchsia-600 text-white p-8 text-center border-b border-white/10 relative">
+        <button onclick="showSection('alatSection')" class="absolute left-6 top-8 text-white hover:text-cyan-200 flex items-center gap-2 text-sm font-medium">
+          <i class="fa-solid fa-arrow-left-long"></i> Kembali
+        </button>
+        <h2 class="text-3xl font-bold">Form Penyewaan</h2>
+        <p class="mt-2 text-emerald-100">Aset non Kategori Ma'had Aly Amtsilati</p>
+      </div>
+
+      <!-- FORM CONTENT -->
+      <form id="penyewaLainnya" class="p-8 space-y-8" onsubmit="event.preventDefault();"> <!-- id="dataPenyewa" -->
+        <!-- BARANG -->
+        <div>
+          <h3 class="text-2xl font-semibold text-white mb-4 flex items-center gap-3">
+            <span class="w-8 h-8 rounded-full bg-cyan-500/15 text-cyan-400 text-sm flex items-center justify-center font-bold">1</span>
+            Aset yang Disewa
+          </h3>
+          <div id="barangLainnya" class="bg-slate-900/60 rounded-2xl p-5 space-y-3 text-slate-200 border border-white/5"> <!-- id="hasilBarang" -->
+            <!-- Diisi via JS -->
+          </div>
+        </div>
+
+        <!-- STEP 1: PERSONAL & TIME INFO -->
+        <div id="step1Lainnya"> <!-- id="step1" -->
+          <!-- DATA -->
+          <div class="space-y-6">
+            <h3 class="text-2xl font-semibold text-white flex items-center gap-3">
+              <span class="w-8 h-8 rounded-full bg-cyan-500/15 text-cyan-400 text-sm flex items-center justify-center font-bold">2</span>
+              Data Penyewa
+            </h3>
+            <div class="grid md:grid-cols-2 gap-5">
+              <div>
+                <label class="block mb-2 font-medium text-slate-300">Nama Lengkap</label>
+                <input id="lainnyaNama" type="text" class="w-full bg-slate-900/70 border border-cyan-500/20 text-white rounded-xl px-4 py-3 focus:border-cyan-400 focus:ring-2 focus:ring-cyan-500/30 outline-none transition-all" required>
+              </div><!-- id="NamaLengkap" -->
+              <div>
+                <label class="block mb-2 font-medium text-slate-300">Asal Media/Komunitas</label>
+                <input id="lainnyaAsal" type="text" class="w-full bg-slate-900/70 border border-cyan-500/20 text-white rounded-xl px-4 py-3 focus:border-cyan-400 focus:ring-2 focus:ring-cyan-500/30 outline-none transition-all" required>
+              </div><!-- id="AsalMediaKomunitas" -->
+              <div>
+                <label class="block mb-2 font-medium text-slate-300">Asrama/Departemen</label>
+                <input id="lainnyaAsrama" type="text" class="w-full bg-slate-900/70 border border-cyan-500/20 text-white rounded-xl px-4 py-3 focus:border-cyan-400 focus:ring-2 focus:ring-cyan-500/30 outline-none transition-all" required>
+              </div><!-- id="AsramaDepartemen" -->
+              <div>
+                <label class="block mb-2 font-medium text-slate-300">No HP Aktif (Hubungkan ke WA)</label>
+                <input id="lainnyaWA" type="tel" inputmode="numeric" placeholder="08xxxxxxxxxx" class="w-full bg-slate-900/70 border border-cyan-500/20 text-white rounded-xl px-4 py-3 focus:border-cyan-400 focus:ring-2 focus:ring-cyan-500/30 outline-none transition-all" required>
+              </div><!-- id="NoHPAktif" -->
+            </div>
+            <div>
+              <label class="block mb-2 font-medium text-slate-300">Alamat Lengkap</label>
+              <textarea id="lainnyaAlamat" rows="3" class="w-full bg-slate-900/70 border border-cyan-500/20 text-white rounded-xl px-4 py-3 focus:border-cyan-400 focus:ring-2 focus:ring-cyan-500/30 outline-none transition-all" required></textarea>
+            </div><!-- id="Alamat" -->
+            <!-- INFORMASI KHUSUS LAINNYA -->
+            <div class="mt-6">
+              <h4 class="text-lg font-semibold text-white mb-3">Informasi Tambahan</h4>
+              <div>
+                <label class="block mb-2 text-sm text-slate-300">Keterangan / Catatan</label>
+                <textarea id="lainnyaNotes" rows="3" class="w-full bg-slate-900/70 border border-cyan-500/20 text-white rounded-xl px-3 py-2" placeholder="Keterangan tambahan tentang kebutuhan aset"></textarea>
+              </div>
+            </div>
+          </div>
+
+          <!-- WAKTU -->
+          <div class="mt-8">
+            <h3 class="text-2xl font-semibold text-white mb-6 flex items-center gap-3">
+              <span class="w-8 h-8 rounded-full bg-cyan-500/15 text-cyan-400 text-sm flex items-center justify-center font-bold">3</span>
+              Waktu Penyewaan
+            </h3>
+            <div class="grid md:grid-cols-2 gap-5">
+              <div>
+                <label class="block mb-2 font-medium text-slate-300">Waktu Ambil</label>
+                <div class="flex gap-2">
+                  <input id="lainnyaWaktuAmbilDate" type="date" onchange="hitungTotal()" class="w-1/2 bg-slate-900/70 border border-cyan-500/20 text-white rounded-xl px-4 py-3 focus:border-cyan-400 outline-none transition-all">
+                  <input id="lainnyaWaktuAmbilTime" type="time" onchange="hitungTotal()" class="w-1/2 bg-slate-900/70 border border-cyan-500/20 text-white rounded-xl px-4 py-3 focus:border-cyan-400 outline-none transition-all">
+                </div>
+              </div>
+              <div>
+                <label class="block mb-2 font-medium text-slate-300">Waktu Kembali</label>
+                <div class="flex gap-2">
+                  <input id="lainnyaWaktuKembaliDate" type="date" onchange="hitungTotal()" class="w-1/2 bg-slate-900/70 border border-cyan-500/20 text-white rounded-xl px-4 py-3 focus:border-cyan-400 outline-none transition-all">
+                  <input id="lainnyaWaktuKembaliTime" type="time" onchange="hitungTotal()" class="w-1/2 bg-slate-900/70 border border-cyan-500/20 text-white rounded-xl px-4 py-3 focus:border-cyan-400 outline-none transition-all">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TOTAL ESTIMASI -->
+          <div class="glass border border-cyan-500/20 rounded-2xl p-6 mt-8">
+            <div class="flex justify-between items-center flex-wrap gap-4">
+              <div>
+                <h3 class="text-xl font-semibold text-white">Total Estimasi Biaya</h3>
+                <p class="text-slate-400 text-sm mt-1">Estimasi biaya sewa berdasarkan paket aset</p>
+              </div>
+              <div>
+                <div id="lainnyaDurationJamDisplay" class="text-sm text-slate-400">Durasi: <span id="lainnyaDurationJam">0</span> jam</div>
+                <div id="lainnyaTotalHarga" class="text-3xl font-bold text-cyan-400">Rp0</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- BUTTON LANJUT -->
+          <div class="flex justify-end mt-10">
+            <button type="button" onclick="nextStep()" class="w-full bg-blue-600 text-white py-4 rounded-xl hover:bg-blue-700 active:scale-[0.97] border border-white/10 transition-all duration-200 font-semibold text-lg flex items-center justify-center gap-3">
+              Lanjut ke Persetujuan & Aturan <i class="fa-solid fa-circle-check"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- STEP 2: TERMS AND CONDITIONS -->
+        <div id="step2Lainnya" style="display: none;">
+          <!-- id="step2" -->
+           <!-- PERATURAN -->
+          <div class="bg-slate-900/80 border border-amber-500/20 rounded-2xl p-6">
+            <div class="flex items-center gap-3 mb-5">
+              <div class="w-12 h-12 rounded-full bg-amber-500/10 flex items-center justify-center text-2xl text-amber-500">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+              </div>
+              <div>
+                <h3 class="text-2xl font-semibold text-amber-500">PERATURAN & DENDA</h3>
+                <p class="text-slate-400 text-sm mt-1">Mohon dibaca dengan teliti sebelum menyetujui peminjaman</p>
+              </div>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-4 text-slate-300 leading-relaxed">
+              <div class="bg-slate-950 rounded-xl p-4 border border-white/5">
+                <b class="text-amber-400"><i class="fa-solid fa-mosque mr-1.5"></i> 1. Wajib Santri</b>
+                <p class="mt-1 text-sm text-slate-400">Khusus Santri aktif Darul Falah Amtsilati.</p>
+              </div>
+              <div class="bg-slate-950 rounded-xl p-4 border border-white/5">
+                <b class="text-amber-400"><i class="fa-solid fa-circle-nodes mr-1.5"></i> 2. Skill Operator</b>
+                <p class="mt-1 text-sm text-slate-400">Wajib memahami pengoperasian kamera/audio (bukan tahap belajar pemula).</p>
+              </div>
+              <div class="bg-slate-950 rounded-xl p-4 border border-white/5">
+                <b class="text-amber-400"><i class="fa-solid fa-id-card mr-1.5"></i> 3. Jaminan Identitas</b>
+                <p class="mt-1 text-sm text-slate-400">Menyerahkan KTP / KTS / Kartu Mahasiswa asli saat serah terima aset.</p>
+              </div>
+              <div class="bg-slate-950 rounded-xl p-4 border border-white/5">
+                <b class="text-amber-400"><i class="fa-solid fa-clock mr-1.5"></i> 4. Toleransi Waktu</b>
+                <p class="mt-1 text-sm text-slate-400">Keterlambatan maksimal pemulangan adalah 10 Menit.</p>
+              </div>
+              <div class="bg-slate-950 rounded-xl p-4 border border-white/5">
+                <b class="text-amber-400"><i class="fa-solid fa-circle-dollar-to-slot mr-1.5"></i> 5. Denda Telat</b>
+                <p class="mt-1 text-sm text-slate-400">Lewat batas toleransi dikenakan denda Rp10.000 / Jam keterlambatan.</p>
+              </div>
+              <div class="bg-slate-950 rounded-xl p-4 border border-white/5">
+                <b class="text-amber-400"><i class="fa-solid fa-screwdriver-wrench mr-1.5"></i> 6. Kerusakan & Kehilangan</b>
+                <p class="mt-1 text-sm text-slate-400">Kerusakan/kehilangan aset sepenuhnya ditanggung oleh penyewa (ganti unit/perbaikan).</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- KESEPAKATAN -->
+          <div class="glass border border-cyan-500/20 rounded-2xl p-6 mt-8">
+            <h3 class="text-xl font-semibold text-cyan-400 mb-4"><i class="fa-solid fa-file-signature"></i> KESEPAKATAN PENYEWA</h3>
+            <p class="text-slate-300 leading-relaxed italic text-sm">
+              "Dengan mengirimkan format peminjaman ini, saya menyatakan bertanggung jawab penuh atas keamanan fisik aset, sanggup mengoperasikannya secara semestinya, dan siap membayar denda atau biaya ganti rugi sesuai dengan ketentuan resmi yang berlaku."
+            </p>
+            <label class="flex items-start gap-3 mt-6 cursor-pointer select-none">
+              <input type="checkbox" id="agreementLainnya" onchange="toggleButton()" class="w-5 h-5 mt-1 accent-cyan-500 cursor-pointer">
+              <span class="text-slate-300 text-sm">Saya menyetujui seluruh ketentuan dan tanggung jawab penyewaan</span>
+            </label>
+          </div>
+
+          <!-- BUTTON STEP 2 -->
+          <div class="flex justify-between mt-10 gap-4 flex-wrap">
+            <button type="button" onclick="prevStep()" class="bg-slate-800 text-white px-8 py-4 rounded-xl hover:bg-slate-700 active:scale-95 border border-white/5 transition duration-200 font-medium">
+              <i class="fa-solid fa-arrow-left"></i> Kembali
+            </button>
+            <button id="lainnyaSubmit" type="submit" onclick="lainnyaBooking()" disabled class="bg-slate-700 text-slate-400 px-8 py-4 rounded-xl cursor-not-allowed border border-white/5 transition-all duration-200 font-semibold flex items-center gap-2">
+              Kirim Booking <i class="fa-brands fa-whatsapp text-lg"></i> <!-- id="submitBtn" type="submit" onclick="submitBooking()" disabled -->
+            </button>
+          </div>
+        </div>
+      </form>
+</section>

@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
-  <title>Meta Hati - Rental Multimedia</title>
+  <title>METAHATI - Asetkita</title>
 
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -293,10 +293,11 @@
           <i class="fa-solid fa-arrow-left-long"></i> Kembali
         </button>
         <h2 class="text-3xl font-bold">Form Penyewaan</h2>
-        <p class="mt-2 text-emerald-100">Media Ma'had Aly Amtsilati</p>
+        <p id="formSubtitle" class="mt-2 text-emerald-100">Aset Ma'had Aly Amtsilati</p>
       </div>
 
       <!-- FORM CONTENT -->
+      <div id="selectedCategoryBanner" class="px-8 pt-6 text-cyan-300 text-sm font-semibold hidden"></div>
       <form id="dataPenyewa" class="p-8 space-y-8" onsubmit="event.preventDefault();">
         <!-- BARANG -->
         <div>
@@ -306,6 +307,10 @@
           </h3>
           <div id="hasilBarang" class="bg-slate-900/60 rounded-2xl p-5 space-y-3 text-slate-200 border border-white/5">
             <!-- Diisi via JS -->
+          </div>
+          <!-- Category-specific fields will be injected here -->
+          <div id="categoryFormFields" class="bg-slate-900/60 rounded-2xl p-5 mt-4 text-slate-200 border border-white/5">
+            <!-- renderCategoryFields(group) akan mengisi elemen ini -->
           </div>
         </div>
 
@@ -350,11 +355,17 @@
             <div class="grid md:grid-cols-2 gap-5">
               <div>
                 <label class="block mb-2 font-medium text-slate-300">Waktu Ambil</label>
-                <input id="WaktuAmbil" type="date" onchange="hitungTotal()" class="w-full bg-slate-900/70 border border-cyan-500/20 text-white rounded-xl px-4 py-3 focus:border-cyan-400 focus:ring-2 focus:ring-cyan-500/30 outline-none transition-all">
+                <div class="flex gap-2">
+                  <input id="WaktuAmbilDate" type="date" onchange="hitungTotal()" class="w-1/2 bg-slate-900/70 border border-cyan-500/20 text-white rounded-xl px-4 py-3 focus:border-cyan-400 outline-none transition-all">
+                  <input id="WaktuAmbilTime" type="time" onchange="hitungTotal()" class="w-1/2 bg-slate-900/70 border border-cyan-500/20 text-white rounded-xl px-4 py-3 focus:border-cyan-400 outline-none transition-all">
+                </div>
               </div>
               <div>
                 <label class="block mb-2 font-medium text-slate-300">Waktu Kembali</label>
-                <input id="WaktuKembali" type="date" onchange="hitungTotal()" class="w-full bg-slate-900/70 border border-cyan-500/20 text-white rounded-xl px-4 py-3 focus:border-cyan-400 focus:ring-2 focus:ring-cyan-500/30 outline-none transition-all">
+                <div class="flex gap-2">
+                  <input id="WaktuKembaliDate" type="date" onchange="hitungTotal()" class="w-1/2 bg-slate-900/70 border border-cyan-500/20 text-white rounded-xl px-4 py-3 focus:border-cyan-400 outline-none transition-all">
+                  <input id="WaktuKembaliTime" type="time" onchange="hitungTotal()" class="w-1/2 bg-slate-900/70 border border-cyan-500/20 text-white rounded-xl px-4 py-3 focus:border-cyan-400 outline-none transition-all">
+                </div>
               </div>
             </div>
           </div>
@@ -366,7 +377,10 @@
                 <h3 class="text-xl font-semibold text-white">Total Estimasi Biaya</h3>
                 <p class="text-slate-400 text-sm mt-1">Estimasi biaya sewa berdasarkan paket aset</p>
               </div>
-              <div id="totalHarga" class="text-3xl font-bold text-cyan-400">Rp0</div>
+              <div>
+                <div id="durationJamDisplay" class="text-sm text-slate-400">Durasi: <span id="durationJam">0</span> jam</div>
+                <div id="totalHarga" class="text-3xl font-bold text-cyan-400">Rp0</div>
+              </div>
             </div>
           </div>
 
@@ -602,12 +616,17 @@
   <!-- ================================= -->
   <!-- FOOTER -->
   <!-- ================================= -->
-  <footer class="mt-auto glass border-t border-white/5 py-8 px-6 text-center text-sm text-slate-400">
+  <footer class="mt-auto glass border-t border-white/5 py-6 px-6 text-sm text-slate-400">
     <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
-      <p>&copy; 2026 <span class="text-white font-bold">Metahati</span></p>
+      <div class="text-center sm:text-left">
+        <p class="text-slate-300">&copy; <span id="footerYear">2026</span> <span class="text-white font-bold">Metahati</span>. Semua hak dilindungi.</p>
+        <p class="text-xs text-slate-500 mt-1">Dikelola oleh Tim Multimedia Ma'had Aly Amtsilati</p>
+      </div>
+
       <div class="flex items-center gap-4">
-        <button onclick="verifyAdminAccess()" class="hover:text-cyan-400 text-xs font-semibold flex items-center gap-1">
-          <i class="fa-solid fa-lock"></i> Portal Pengelola
+        <div class="hidden sm:block text-sm text-slate-400">Kontak: <a href="mailto:Tantetantrum" class="text-cyan-400 hover:underline">Tantetantrum</a></div>
+        <button id="footerAdminBtn" onclick="verifyAdminAccess()" class="bg-slate-800/80 hover:bg-cyan-600/20 hover:text-cyan-400 text-slate-300 px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold border border-white/5 transition-all flex items-center gap-2">
+          <i class="fa-solid fa-user-gear"></i> Portal Admin
         </button>
       </div>
     </div>
@@ -624,7 +643,7 @@
       {
         id: "alat_1",
         nama: "Kamera Canon RP",
-        kategori: "Kamera",
+        kategori: "Media",
         deskripsi: "Include kamera mirrorless + lensa + baterai + charger + memory card",
         gambar: "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?q=80&w=1200&auto=format&fit=crop",
         status: "Tersedia",
@@ -637,7 +656,7 @@
       {
         id: "alat_2",
         nama: "Flash Godox TT680",
-        kategori: "Lighting",
+        kategori: "Media",
         deskripsi: "Flash eksternal kamera profesional + baterai charger",
         gambar: "https://images.unsplash.com/photo-1516724562728-afc824a36e84?q=80&w=1200&auto=format&fit=crop",
         status: "Tersedia",
@@ -649,7 +668,7 @@
       {
         id: "alat_3",
         nama: "Handycam Sony FDR-AX43",
-        kategori: "Kamera",
+        kategori: "Media",
         deskripsi: "Perekaman video resolusi tinggi durasi panjang, include tripod",
         gambar: "https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?q=80&w=1200&auto=format&fit=crop",
         status: "Tersedia",
@@ -661,7 +680,7 @@
       {
         id: "alat_4",
         nama: "Microphone Wireless Rode GO II",
-        kategori: "Audio",
+        kategori: "Media",
         deskripsi: "Dual channel wireless microphone premium untuk wawancara",
         gambar: "https://images.unsplash.com/photo-1590602847861-f357a9332bbc?q=80&w=1200&auto=format&fit=crop",
         status: "Tersedia",
@@ -704,17 +723,20 @@
         duration: 1200,
         easing: 'easeOutExpo'
       });
+      // Set footer year if present
+      const fy = document.getElementById('footerYear');
+      if (fy) fy.innerText = new Date().getFullYear();
     };
 
     // View Routing Helper
     function showSection(sectionId) {
-      document.getElementById('landing').style.display = 'none';
-      document.getElementById('alatSection').style.display = 'none';
-      document.getElementById('formSection').style.display = 'none';
-      document.getElementById('adminSection').style.display = 'none';
+      document.querySelectorAll('section').forEach(section => {
+        section.style.display = 'none';
+      });
 
       const target = document.getElementById(sectionId);
-      target.style.display = 'block';
+      if (!target) return;
+      target.style.display = sectionId === 'landing' ? 'flex' : 'block';
       target.classList.add('fade-in');
 
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -743,7 +765,8 @@
       const query = document.getElementById('searchBar').value.toLowerCase();
 
       const filtered = databaseAlat.filter(item => {
-        const matchesCategory = (filterCategory === "Semua" || item.kategori === filterCategory);
+        const displayKategori = mapKategoriToGroup(item.kategori);
+        const matchesCategory = (filterCategory === "Semua" || displayKategori === filterCategory);
         const matchesSearch = item.nama.toLowerCase().includes(query) || item.deskripsi.toLowerCase().includes(query);
         return matchesCategory && matchesSearch;
       });
@@ -759,6 +782,7 @@
       }
 
       filtered.forEach(item => {
+        const displayKategori = mapKategoriToGroup(item.kategori);
         // Build Select Options for Packages
         let options = `<option value="">Pilih Paket Tarif</option>`;
         item.paket.forEach(p => {
@@ -779,7 +803,7 @@
               </div>
               <div class="p-6">
                 <div class="flex items-center gap-2 mb-1.5">
-                  <span class="bg-cyan-500/15 text-cyan-400 text-[10px] font-bold tracking-wider uppercase px-2 py-0.5 rounded-md border border-cyan-500/25">${item.kategori}</span>
+                  <span class="bg-cyan-500/15 text-cyan-400 text-[10px] font-bold tracking-wider uppercase px-2 py-0.5 rounded-md border border-cyan-500/25">${displayKategori}</span>
                 </div>
                 <h3 class="text-2xl font-bold text-white mb-2">${item.nama}</h3>
                 <p class="text-slate-400 text-xs leading-relaxed line-clamp-2">${item.deskripsi}</p>
@@ -919,10 +943,92 @@
       });
     }
 
-    function hapusBarang(index) {
-      keranjang.splice(index, 1);
-      tampilkanKeranjang();
-      hitungTotal();
+    function mapKategoriToGroup(kategori) {
+      if (!kategori) return "Lainnya";
+      const normalized = kategori.toString().trim().toLowerCase();
+      if (["media", "kamera", "lighting", "audio", "videografi", "fotografi", "sound", "video", "multimedia"].includes(normalized)) return "Media";
+      if (["decoration", "dekorasi", "dekoratif", "dekor"].includes(normalized)) return "Decoration";
+      if (["properti", "props", "property", "prop"].includes(normalized)) return "Properti";
+      if (["lainnya", "others", "other"].includes(normalized)) return "Lainnya";
+      return "Lainnya";
+    }
+
+    function getActiveFormConfig() {
+      const configs = {
+        formSection: {
+          step1Id: 'step1',
+          step2Id: 'step2',
+          agreementId: 'agreement',
+          submitBtnId: 'submitBtn',
+          waktuAmbilDateId: 'WaktuAmbilDate',
+          waktuAmbilTimeId: 'WaktuAmbilTime',
+          waktuKembaliDateId: 'WaktuKembaliDate',
+          waktuKembaliTimeId: 'WaktuKembaliTime',
+          totalHargaId: 'totalHarga'
+        },
+        formMedia: {
+          step1Id: 'step1Media',
+          step2Id: 'step2Media',
+          agreementId: 'agreementMedia',
+          submitBtnId: 'mediaSubmit',
+          waktuAmbilDateId: 'mediaWaktuAmbilDate',
+          waktuAmbilTimeId: 'mediaWaktuAmbilTime',
+          waktuKembaliDateId: 'mediaWaktuKembaliDate',
+          waktuKembaliTimeId: 'mediaWaktuKembaliTime',
+          totalHargaId: 'mediaTotalHarga'
+        },
+        formDecoration: {
+          step1Id: 'step1Decoration',
+          step2Id: 'step2Decoration',
+          agreementId: 'agreementDecoration',
+          submitBtnId: 'decorationSubmit',
+          waktuAmbilDateId: 'decorationWaktuAmbilDate',
+          waktuAmbilTimeId: 'decorationWaktuAmbilTime',
+          waktuKembaliDateId: 'decorationWaktuKembaliDate',
+          waktuKembaliTimeId: 'decorationWaktuKembaliTime',
+          totalHargaId: 'decorationTotalHarga'
+        },
+        formProperti: {
+          step1Id: 'step1Properti',
+          step2Id: 'step2Properti',
+          agreementId: 'agreementProperti',
+          submitBtnId: 'propertiSubmit',
+          waktuAmbilDateId: 'propertiWaktuAmbilDate',
+          waktuAmbilTimeId: 'propertiWaktuAmbilTime',
+          waktuKembaliDateId: 'propertiWaktuKembaliDate',
+          waktuKembaliTimeId: 'propertiWaktuKembaliTime',
+          totalHargaId: 'propertiTotalHarga'
+        },
+        formLainnya: {
+          step1Id: 'step1Lainnya',
+          step2Id: 'step2Lainnya',
+          agreementId: 'agreementLainnya',
+          submitBtnId: 'lainnyaSubmit',
+          waktuAmbilDateId: 'lainnyaWaktuAmbilDate',
+          waktuAmbilTimeId: 'lainnyaWaktuAmbilTime',
+          waktuKembaliDateId: 'lainnyaWaktuKembaliDate',
+          waktuKembaliTimeId: 'lainnyaWaktuKembaliTime',
+          totalHargaId: 'lainnyaTotalHarga'
+        }
+      };
+      const activeSection = Object.keys(configs).find(sectionId => {
+        const el = document.getElementById(sectionId);
+        return el && el.style.display !== 'none';
+      }) || 'formSection';
+      return configs[activeSection];
+    }
+
+    function getSelectedCartCategoryGroup() {
+      const groups = keranjang.map(value => {
+        const itemName = value.split(" - ")[0].trim();
+        const match = databaseAlat.find(a => a.nama === itemName);
+        return match ? mapKategoriToGroup(match.kategori) : "Lainnya";
+      });
+
+      const uniqueGroups = [...new Set(groups)];
+      if (uniqueGroups.length === 0) return "Lainnya";
+      if (uniqueGroups.length === 1) return uniqueGroups[0];
+      return "Campuran";
     }
 
     function lanjutForm() {
@@ -937,171 +1043,294 @@
         });
         return;
       }
+      const categoryGroup = getSelectedCartCategoryGroup();
+      const subtitle = categoryGroup === 'Campuran'
+        ? 'Form Penyewaan Campuran'
+        : `Form Penyewaan ${categoryGroup}`;
 
-      showSection('formSection');
+      document.getElementById('formSubtitle').innerText = subtitle;
+      const categoryBanner = document.getElementById('selectedCategoryBanner');
+      categoryBanner.textContent = categoryGroup === 'Campuran'
+        ? 'Kategori terpilih: Campuran (multiple kategori)'
+        : `Kategori terpilih: ${categoryGroup}`;
+      categoryBanner.classList.remove('hidden');
 
-      anime({
-        targets: '#formSection .glass',
-        translateY: [50, 0],
-        opacity: [0, 1],
-        duration: 1000,
-        easing: 'easeOutExpo'
+      // Muat fragmen per-kategori dari pemisah.html jika diperlukan,
+      // lalu tampilkan section yang sesuai (Media/Decoration/Properti/Lainnya).
+      loadPemisah(() => {
+        let sectionToShow = null;
+        if (categoryGroup === 'Media') sectionToShow = 'formMedia';
+        else if (categoryGroup === 'Decoration') sectionToShow = 'formDecoration';
+        else if (categoryGroup === 'Properti') sectionToShow = 'formProperti';
+        else if (categoryGroup === 'Lainnya') sectionToShow = 'formLainnya';
+
+        if (sectionToShow && document.getElementById(sectionToShow)) {
+          showSection(sectionToShow);
+          populateCategoryFragment(categoryGroup);
+        } else {
+          // Campuran atau kategori khusus tidak tersedia: tampilkan generic formSection
+          showSection('formSection');
+          const hasil = document.getElementById('hasilBarang');
+          hasil.innerHTML = "";
+          keranjang.forEach((item, index) => {
+            const parts = item.split(" - ");
+            hasil.innerHTML += `
+              <div class="bg-slate-950 rounded-xl border border-white/5 p-4 text-slate-200 text-sm flex justify-between items-center">
+                <div>
+                  <b class="text-white block">${index + 1}. ${parts[0]}</b>
+                  <span class="text-xs text-slate-400">${parts[1]}</span>
+                </div>
+                <span class="text-cyan-400 font-bold">${parts[2]}</span>
+              </div>
+            `;
+          });
+        }
+
+        anime({
+          targets: '#formSection .glass, #formMedia .glass, #formDecoration .glass, #formProperti .glass, #formLainnya .glass',
+          translateY: [50, 0],
+          opacity: [0, 1],
+          duration: 1000,
+          easing: 'easeOutExpo'
+        });
       });
+    }
 
-      const hasil = document.getElementById('hasilBarang');
-      hasil.innerHTML = "";
 
-      keranjang.forEach((item, index) => {
-        const parts = item.split(" - ");
-        hasil.innerHTML += `
+    // Fetch pemisah.html dan inject ke DOM sekali saja
+    function loadPemisah(callback) {
+      if (document.getElementById('pemisahContainer')) {
+        callback();
+        return;
+      }
+
+      fetch('./pemisah.html')
+        .then(res => res.text())
+        .then(html => {
+          const wrapper = document.createElement('div');
+          wrapper.id = 'pemisahContainer';
+          wrapper.innerHTML = html;
+
+          // Remove any script tags to avoid accidental execution
+          wrapper.querySelectorAll('script').forEach(s => s.remove());
+
+          document.body.appendChild(wrapper);
+          callback();
+        })
+        .catch(err => {
+          console.error('Gagal memuat pemisah.html', err);
+          // fallback: tetap panggil callback agar alur tidak terhenti
+          callback();
+        });
+    }
+
+    function populateCategoryFragment(group) {
+      // tentukan id target dan elemen total
+      let barangId = '';
+      let totalId = '';
+      if (group === 'Media') { barangId = 'barangMedia'; totalId = 'mediaTotalHarga'; }
+      else if (group === 'Decoration') { barangId = 'barangDecoration'; totalId = 'decorationTotalHarga'; }
+      else if (group === 'Properti') { barangId = 'barangProperti'; totalId = 'propertiTotalHarga'; }
+      else { barangId = 'barangLainnya'; totalId = 'lainnyaTotalHarga'; }
+
+      const container = document.getElementById(barangId);
+      if (!container) return;
+      container.innerHTML = '';
+
+      keranjang.forEach((item, idx) => {
+        const parts = item.split(' - ');
+        container.innerHTML += `
           <div class="bg-slate-950 rounded-xl border border-white/5 p-4 text-slate-200 text-sm flex justify-between items-center">
             <div>
-              <b class="text-white block">${index + 1}. ${parts[0]}</b>
+              <b class="text-white block">${idx + 1}. ${parts[0]}</b>
               <span class="text-xs text-slate-400">${parts[1]}</span>
             </div>
             <span class="text-cyan-400 font-bold">${parts[2]}</span>
           </div>
         `;
       });
+
+      const totalElem = document.getElementById(totalId);
+      if (totalElem) totalElem.innerText = computeCartTotalString();
     }
 
     // ================================= -->
     // FORM STEPPING & MULTIPLIER ESTIMATION
     // ================================= -->
     function nextStep() {
-      const NamaLengkap = document.getElementById('NamaLengkap');
-      const AsalMediaKomunitas = document.getElementById('AsalMediaKomunitas');
-      const AsramaDepartemen = document.getElementById('AsramaDepartemen');
-      const NoHPAktif = document.getElementById('NoHPAktif');
-      const Alamat = document.getElementById('Alamat');
-      const WaktuAmbil = document.getElementById('WaktuAmbil');
-      const WaktuKembali = document.getElementById('WaktuKembali');
+      const config = getActiveFormConfig();
+      const nameFieldId = config.step1Id === 'step1'
+        ? 'NamaLengkap'
+        : config.step1Id === 'step1Media'
+          ? 'mediaNama'
+          : config.step1Id === 'step1Decoration'
+            ? 'decorationNama'
+            : config.step1Id === 'step1Properti'
+              ? 'propertiNama'
+              : 'lainnyaNama';
+      const fields = {
+        nama: document.querySelector(`#${config.step1Id} #${nameFieldId}`) || document.getElementById('NamaLengkap'),
+        asal: document.querySelector(`#${config.step1Id} input[id$="Asal"]`) || document.getElementById('AsalMediaKomunitas'),
+        asrama: document.querySelector(`#${config.step1Id} input[id$="Asrama"]`) || document.getElementById('AsramaDepartemen'),
+        hp: document.querySelector(`#${config.step1Id} input[id$="WA"]`) || document.getElementById('NoHPAktif'),
+        alamat: document.querySelector(`#${config.step1Id} textarea[id$="Alamat"]`) || document.getElementById('Alamat'),
+        ambilDate: document.getElementById(config.waktuAmbilDateId),
+        ambilTime: document.getElementById(config.waktuAmbilTimeId),
+        kembaliDate: document.getElementById(config.waktuKembaliDateId),
+        kembaliTime: document.getElementById(config.waktuKembaliTimeId)
+      };
 
-      const semuaInput = [NamaLengkap, AsalMediaKomunitas, AsramaDepartemen, NoHPAktif, Alamat, WaktuAmbil, WaktuKembali];
-      semumaInput = semuaInput.forEach(input => input.classList.remove('input-error'));
+      [fields.nama, fields.asal, fields.asrama, fields.hp, fields.alamat, fields.ambilDate, fields.ambilTime, fields.kembaliDate, fields.kembaliTime].forEach(input => {
+        if (input) input.classList.remove('input-error');
+      });
 
-      // Validate inputs
-      if(NamaLengkap.value.trim() === "") {
-        NamaLengkap.classList.add('input-error');
+      if (!fields.nama || fields.nama.value.trim() === "") {
+        if (fields.nama) fields.nama.classList.add('input-error');
         Swal.fire({ text: "Nama lengkap wajib diisi.", background: '#0f172a', color: '#e2e8f0', confirmButtonColor: '#2563eb' });
-        NamaLengkap.focus(); return;
+        fields.nama?.focus();
+        return;
       }
-      if(AsalMediaKomunitas.value.trim() === "") {
-        AsalMediaKomunitas.classList.add('input-error');
+      if (!fields.asal || fields.asal.value.trim() === "") {
+        if (fields.asal) fields.asal.classList.add('input-error');
         Swal.fire({ text: "Asal media/komunitas wajib diisi.", background: '#0f172a', color: '#e2e8f0', confirmButtonColor: '#2563eb' });
-        AsalMediaKomunitas.focus(); return;
+        fields.asal?.focus();
+        return;
       }
-      if(AsramaDepartemen.value.trim() === "") {
-        AsramaDepartemen.classList.add('input-error');
+      if (!fields.asrama || fields.asrama.value.trim() === "") {
+        if (fields.asrama) fields.asrama.classList.add('input-error');
         Swal.fire({ text: "Asrama/Departemen wajib diisi.", background: '#0f172a', color: '#e2e8f0', confirmButtonColor: '#2563eb' });
-        AsramaDepartemen.focus(); return;
+        fields.asrama?.focus();
+        return;
       }
-      if(NoHPAktif.value.trim() === "") {
-        NoHPAktif.classList.add('input-error');
+      if (!fields.hp || fields.hp.value.trim() === "") {
+        if (fields.hp) fields.hp.classList.add('input-error');
         Swal.fire({ text: "Nomor HP wajib diisi.", background: '#0f172a', color: '#e2e8f0', confirmButtonColor: '#2563eb' });
-        NoHPAktif.focus(); return;
+        fields.hp?.focus();
+        return;
       }
-      if(!/^[0-9]+$/.test(NoHPAktif.value)) {
-        NoHPAktif.classList.add('input-error');
+      if (fields.hp && !/^[0-9]+$/.test(fields.hp.value)) {
+        fields.hp.classList.add('input-error');
         Swal.fire({ text: "No HP hanya boleh berisi angka.", background: '#0f172a', color: '#e2e8f0', confirmButtonColor: '#2563eb' });
-        NoHPAktif.focus(); return;
+        fields.hp.focus();
+        return;
       }
-      if(Alamat.value.trim() === "") {
-        Alamat.classList.add('input-error');
+      if (!fields.alamat || fields.alamat.value.trim() === "") {
+        if (fields.alamat) fields.alamat.classList.add('input-error');
         Swal.fire({ text: "Alamat wajib diisi.", background: '#0f172a', color: '#e2e8f0', confirmButtonColor: '#2563eb' });
-        Alamat.focus(); return;
+        fields.alamat?.focus();
+        return;
       }
-      if(WaktuAmbil.value === "") {
-        WaktuAmbil.classList.add('input-error');
-        Swal.fire({ text: "Waktu ambil wajib ditentukan.", background: '#0f172a', color: '#e2e8f0', confirmButtonColor: '#2563eb' });
-        WaktuAmbil.focus(); return;
+      if (!fields.ambilDate || !fields.ambilTime || !fields.ambilDate.value || !fields.ambilTime.value) {
+        if (fields.ambilDate) fields.ambilDate.classList.add('input-error');
+        if (fields.ambilTime) fields.ambilTime.classList.add('input-error');
+        Swal.fire({ text: "Waktu ambil (tanggal & jam) wajib ditentukan.", background: '#0f172a', color: '#e2e8f0', confirmButtonColor: '#2563eb' });
+        fields.ambilDate?.focus();
+        return;
       }
-      if(WaktuKembali.value === "") {
-        WaktuKembali.classList.add('input-error');
-        Swal.fire({ text: "Waktu kembali wajib ditentukan.", background: '#0f172a', color: '#e2e8f0', confirmButtonColor: '#2563eb' });
-        WaktuKembali.focus(); return;
-      }
-
-      const ambil = new Date(WaktuAmbil.value);
-      const kembali = new Date(WaktuKembali.value);
-
-      if(kembali <= ambil) {
-        WaktuKembali.classList.add('input-error');
-        Swal.fire({ text: "Waktu kembali harus lebih dari waktu pengambilan.", background: '#0f172a', color: '#e2e8f0', confirmButtonColor: '#ef4444' });
-        WaktuKembali.focus();
+      if (!fields.kembaliDate || !fields.kembaliTime || !fields.kembaliDate.value || !fields.kembaliTime.value) {
+        if (fields.kembaliDate) fields.kembaliDate.classList.add('input-error');
+        if (fields.kembaliTime) fields.kembaliTime.classList.add('input-error');
+        Swal.fire({ text: "Waktu kembali (tanggal & jam) wajib ditentukan.", background: '#0f172a', color: '#e2e8f0', confirmButtonColor: '#2563eb' });
+        fields.kembaliDate?.focus();
         return;
       }
 
-      document.getElementById('step1').style.display = 'none';
-      document.getElementById('step2').style.display = 'block';
+      const ambil = new Date(fields.ambilDate.value + 'T' + fields.ambilTime.value);
+      const kembali = new Date(fields.kembaliDate.value + 'T' + fields.kembaliTime.value);
+      if (kembali <= ambil) {
+        if (fields.kembaliDate) fields.kembaliDate.classList.add('input-error');
+        if (fields.kembaliTime) fields.kembaliTime.classList.add('input-error');
+        Swal.fire({ text: "Waktu kembali harus lebih dari waktu pengambilan.", background: '#0f172a', color: '#e2e8f0', confirmButtonColor: '#ef4444' });
+        fields.kembaliDate?.focus();
+        return;
+      }
+
+      const step1 = document.getElementById(config.step1Id);
+      const step2 = document.getElementById(config.step2Id);
+      if (step1) step1.style.display = 'none';
+      if (step2) step2.style.display = 'block';
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     function prevStep() {
-      document.getElementById('step1').style.display = 'block';
-      document.getElementById('step2').style.display = 'none';
+      const config = getActiveFormConfig();
+      const step1 = document.getElementById(config.step1Id);
+      const step2 = document.getElementById(config.step2Id);
+      if (step1) step1.style.display = 'block';
+      if (step2) step2.style.display = 'none';
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     function hitungTotal() {
-      const WaktuAmbil = document.getElementById('WaktuAmbil').value;
-      const WaktuKembali = document.getElementById('WaktuKembali').value;
-
-      if(WaktuAmbil === "" || WaktuKembali === "") {
-        document.getElementById('totalHarga').innerText = "Rp0";
+      const config = getActiveFormConfig();
+      const ambilDate = document.getElementById(config.waktuAmbilDateId);
+      const ambilTime = document.getElementById(config.waktuAmbilTimeId);
+      const kembaliDate = document.getElementById(config.waktuKembaliDateId);
+      const kembaliTime = document.getElementById(config.waktuKembaliTimeId);
+      const totalField = document.getElementById(config.totalHargaId);
+      if (!ambilDate || !ambilTime || !kembaliDate || !kembaliTime || ambilDate.value === "" || ambilTime.value === "" || kembaliDate.value === "" || kembaliTime.value === "") {
+        if (totalField) totalField.innerText = "Rp0";
+        const durationId = config.totalHargaId.replace('TotalHarga', 'DurationJam');
+        const durElem = document.getElementById(durationId) || document.getElementById('durationJam');
+        if (durElem) durElem.innerText = '0';
         return;
       }
 
-      const mulai = new Date(WaktuAmbil);
-      const selesai = new Date(WaktuKembali);
-      const selisihMs = selesai - mulai;
-      const durasiJam = Math.ceil(selisihMs / (1000 * 60 * 60));
-
-      if(durasiJam <= 0) {
-        document.getElementById('totalHarga').innerText = "Rp0";
+      const mulai = new Date(ambilDate.value + 'T' + ambilTime.value);
+      const selesai = new Date(kembaliDate.value + 'T' + kembaliTime.value);
+      if (selesai <= mulai) {
+        if (totalField) totalField.innerText = "Rp0";
+        const durationId = config.totalHargaId.replace('TotalHarga', 'DurationJam');
+        const durElem = document.getElementById(durationId) || document.getElementById('durationJam');
+        if (durElem) durElem.innerText = '0';
         return;
       }
 
-      let total = 0;
+      // Calculate total duration in hours (round up to nearest hour)
+      const msDiff = Math.abs(selesai - mulai);
+      const hours = Math.ceil(msDiff / (1000 * 60 * 60));
 
-      keranjang.forEach(item => {
-        const parts = item.split(" - ");
-        const baseName = parts[0];
-        const rawPrice = parseInt(parts[2].replace("Rp", "").replace(/\./g, ""));
-        
-        // Find matching item in database to verify duration multipliers
-        const match = databaseAlat.find(a => a.nama === baseName);
-        if(match) {
-          total += rawPrice;
-        } else {
-          total += rawPrice; // Fallback
-        }
-      });
+      // Compute cart total using per-hour pricing if package defines hours
+      const totalString = computeCartTotalString(hours);
+      if (totalField) totalField.innerText = totalString;
 
-      const rupiah = total.toLocaleString('id-ID');
-      document.getElementById('totalHarga').innerText = `Rp${rupiah}`;
-      
+      // Update duration display if exists
+      const durationId = config.totalHargaId.replace('TotalHarga', 'DurationJam');
+      const durElem = document.getElementById(durationId) || document.getElementById('durationJam');
+      if (durElem) durElem.innerText = String(hours);
+
       anime({
-        targets: '#totalHarga',
-        scale: [1.2, 1],
-        duration: 500,
+        targets: totalField || '#totalHarga',
+        scale: [1.15, 1],
+        duration: 450,
         easing: 'easeOutElastic(1, .7)'
       });
     }
 
     function toggleButton() {
-      const checkbox = document.getElementById('agreement');
-      const button = document.getElementById('submitBtn');
+      // Support multiple agreement checkboxes across different fragments
+      const mapping = [
+        { chk: 'agreement', btn: 'submitBtn' },
+        { chk: 'agreementMedia', btn: 'mediaSubmit' },
+        { chk: 'agreementDecoration', btn: 'decorationSubmit' },
+        { chk: 'agreementProperti', btn: 'propertiSubmit' },
+        { chk: 'agreementLainnya', btn: 'lainnyaSubmit' }
+      ];
 
-      if(checkbox.checked) {
-        button.disabled = false;
-        button.style.cursor = 'pointer';
-        button.className = "bg-blue-600 text-white px-8 py-4 rounded-xl hover:bg-blue-700 active:scale-95 border border-white/10 transition-all duration-200 font-semibold shadow-lg";
-      } else {
-        button.disabled = true;
-        button.style.cursor = 'not-allowed';
-        button.className = "bg-slate-700 text-slate-400 px-8 py-4 rounded-xl border border-white/5 transition-all duration-200 font-semibold";
-      }
+      mapping.forEach(pair => {
+        const chk = document.getElementById(pair.chk);
+        const btn = document.getElementById(pair.btn);
+        if (!btn || !chk) return;
+        if (chk.checked) {
+          btn.disabled = false;
+          btn.style.cursor = 'pointer';
+          btn.className = "bg-blue-600 text-white px-8 py-4 rounded-xl hover:bg-blue-700 active:scale-95 border border-white/10 transition-all duration-200 font-semibold shadow-lg";
+        } else {
+          btn.disabled = true;
+          btn.style.cursor = 'not-allowed';
+          btn.className = "bg-slate-700 text-slate-400 px-8 py-4 rounded-xl border border-white/5 transition-all duration-200 font-semibold";
+        }
+      });
     }
 
     // ================================= -->
@@ -1113,9 +1342,22 @@
       const AsramaDepartemen = document.getElementById('AsramaDepartemen').value;
       const NoHPAktif = document.getElementById('NoHPAktif').value;
       const Alamat = document.getElementById('Alamat').value;
-      const WaktuAmbil = document.getElementById('WaktuAmbil').value;
-      const WaktuKembali = document.getElementById('WaktuKembali').value;
-      const totalHarga = document.getElementById('totalHarga').innerText;
+      const WaktuAmbilDate = document.getElementById('WaktuAmbilDate')?.value || '';
+      const WaktuAmbilTime = document.getElementById('WaktuAmbilTime')?.value || '';
+      const WaktuKembaliDate = document.getElementById('WaktuKembaliDate')?.value || '';
+      const WaktuKembaliTime = document.getElementById('WaktuKembaliTime')?.value || '';
+      const WaktuAmbil = WaktuAmbilDate && WaktuAmbilTime ? (WaktuAmbilDate + 'T' + WaktuAmbilTime) : '';
+      const WaktuKembali = WaktuKembaliDate && WaktuKembaliTime ? (WaktuKembaliDate + 'T' + WaktuKembaliTime) : '';
+      // compute duration hours from date+time fields
+      let durationHours = 0;
+      if (WaktuAmbil && WaktuKembali) {
+        const mulai = new Date(WaktuAmbil);
+        const selesai = new Date(WaktuKembali);
+        if (selesai > mulai) {
+          durationHours = Math.ceil(Math.abs(selesai - mulai) / (1000 * 60 * 60));
+        }
+      }
+      const totalHarga = computeCartTotalString(durationHours);
 
       // Create booking object
       const newBooking = {
@@ -1143,7 +1385,7 @@
         const parts = item.split(" - ");
         const match = databaseAlat.find(a => a.nama === parts[0]);
         if(match) {
-          match.status = "Diprinjam"; // Change availability in dashboard simulation
+          match.status = "Sedang Dipinjam"; // Change availability in dashboard simulation
         }
       });
       localStorage.setItem('meta_hati_alat', JSON.stringify(databaseAlat));
@@ -1162,13 +1404,10 @@
         // Clear Cart and reset form
         keranjang = [];
         tampilkanKeranjang();
-        document.querySelector('form').reset();
+        document.getElementById('dataPenyewa').reset();
         document.getElementById('totalHarga').innerText = "Rp0";
-
-        // Route back
-        document.getElementById('formSection').style.display = 'none';
-        document.getElementById('alatSection').style.display = 'none';
-        document.getElementById('landing').style.display = 'flex';
+        const durElem = document.getElementById('durationJam'); if (durElem) durElem.innerText = '0';
+        showSection('landing');
 
         document.getElementById('step1').style.display = 'block';
         document.getElementById('step2').style.display = 'none';
@@ -1179,39 +1418,27 @@
         submit.className = "bg-slate-700 text-slate-400 px-8 py-4 rounded-xl border border-white/5 transition-all duration-200 font-semibold";
         document.getElementById('agreement').checked = false;
 
-        // Redirect to WhatsApp
-        window.open(whatsappURL, '_blank');
-        
         // Refresh catalog status
         renderKatalog();
         updateAdminStats();
       });
-      // Menangkap elemen form
-  const form = document.getElementById('dataPenyewa');
 
-  // Mendengarkan saat tombol submit ditekan
-  form.addEventListener('submitBtn', function(e) {
-    e.preventDefault(); // Mencegah halaman refresh otomatis
-
-  });
-  
-    // GANTI dengan URL Web App dari Google Apps Script kamu
-    const urlScript = 'https://script.google.com/macros/s/AKfycbxcJNP8xuyMPPdUe0QkYF2J3uUPxHkXW7IjKgH9NkbHFpbCguWE37dNTt1fHhIhSjzU/exec'; 
+      // GANTI dengan URL Web App dari Google Apps Script kamu
+      const urlScript = 'https://script.google.com/macros/s/AKfycbxcJNP8xuyMPPdUe0QkYF2J3uUPxHkXW7IjKgH9NkbHFpbCguWE37dNTt1fHhIhSjzU/exec'; 
 
       const dataPenyewa = {
-       hasilBarang: keranjang.join(", "),
-      NamaLengkap: document.getElementById('NamaLengkap').value,
-      AsalMediaKomunitas: document.getElementById('AsalMediaKomunitas').value,
-      AsramaDepartemen: document.getElementById('AsramaDepartemen').value,
-      NoHPAktif: document.getElementById('NoHPAktif').value,
-      Alamat: document.getElementById('Alamat').value,
-      WaktuAmbil: document.getElementById('WaktuAmbil').value,
-
-      WaktuKembali: document.getElementById('WaktuKembali').value,
-
-      totalHarga: document.getElementById('totalHarga').value,
-      agreement: document.getElementById('agreement').value,
-    };
+        hasilBarang: keranjang.join(", "),
+        NamaLengkap: document.getElementById('NamaLengkap').value,
+        AsalMediaKomunitas: document.getElementById('AsalMediaKomunitas').value,
+        AsramaDepartemen: document.getElementById('AsramaDepartemen').value,
+        NoHPAktif: document.getElementById('NoHPAktif').value,
+        Alamat: document.getElementById('Alamat').value,
+        WaktuAmbil: WaktuAmbil,
+        WaktuKembali: WaktuKembali,
+        totalHarga: document.getElementById('totalHarga').innerText,
+        agreement: document.getElementById('agreement').checked,
+        kategoriForm: document.getElementById('formSubtitle').innerText
+      };
   
     // Mengirim data menggunakan fetch API dengan metode POST
     fetch(urlScript, {
@@ -1224,12 +1451,191 @@
     })
     .then(response => {
       alert('Data penyewaan berhasil dikirim ke Google Sheets!');
-      form.reset(); // Mengosongkan form kembali setelah sukses
+      document.getElementById('dataPenyewa').reset(); // Mengosongkan form kembali setelah sukses
     })
     .catch(error => {
       console.error('Terjadi kesalahan:', error);
       alert('Gagal mengirim data.');
     });
+    }
+
+    // Helper: hitung total dari keranjang (format RpX)
+    // If durationHours is provided (>0) compute per-hour pricing.
+    // Otherwise fallback to summing package prices as stored in cart.
+    function computeCartTotalString(durationHours) {
+      let total = 0;
+      keranjang.forEach(item => {
+        const parts = item.split(' - ');
+        const nama = parts[0] || '';
+        const paketText = parts[1] || '';
+        const priceText = parts[2] || '';
+
+        const raw = priceText.replace('Rp', '').replace(/\./g, '');
+        const paketPrice = parseInt(raw) || 0;
+
+        if (durationHours && durationHours > 0) {
+          // try to parse hours from paketText (e.g., "12 Jam", "5 Jam", "24 Jam")
+          const m = paketText.match(/(\d+)\s*Jam/i);
+          const paketHours = m ? parseInt(m[1], 10) : 1;
+          const perHour = paketHours > 0 ? (paketPrice / paketHours) : paketPrice;
+          total += Math.round(perHour * durationHours);
+        } else {
+          total += paketPrice;
+        }
+      });
+      return 'Rp' + total.toLocaleString('id-ID');
+    }
+
+    function mediaBooking() {
+      const NamaLengkap = document.getElementById('mediaNama').value;
+      const AsalMediaKomunitas = document.getElementById('mediaAsal').value;
+      const AsramaDepartemen = document.getElementById('mediaAsrama').value;
+      const NoHPAktif = document.getElementById('mediaWA').value;
+      const Alamat = document.getElementById('mediaAlamat').value;
+      const mediaWaktuAmbilDate = document.getElementById('mediaWaktuAmbilDate')?.value || '';
+      const mediaWaktuAmbilTime = document.getElementById('mediaWaktuAmbilTime')?.value || '';
+      const mediaWaktuKembaliDate = document.getElementById('mediaWaktuKembaliDate')?.value || '';
+      const mediaWaktuKembaliTime = document.getElementById('mediaWaktuKembaliTime')?.value || '';
+      const WaktuAmbil = mediaWaktuAmbilDate && mediaWaktuAmbilTime ? (mediaWaktuAmbilDate + 'T' + mediaWaktuAmbilTime) : '';
+      const WaktuKembali = mediaWaktuKembaliDate && mediaWaktuKembaliTime ? (mediaWaktuKembaliDate + 'T' + mediaWaktuKembaliTime) : '';
+      const extras = {
+        projectName: document.getElementById('mediaProjectName')?.value || '',
+        operatorLevel: document.getElementById('mediaOperatorSkill')?.value || ''
+      };
+      let mediaDuration = 0;
+      if (WaktuAmbil && WaktuKembali) {
+        const mulaiM = new Date(WaktuAmbil);
+        const selesaiM = new Date(WaktuKembali);
+        if (selesaiM > mulaiM) mediaDuration = Math.ceil(Math.abs(selesaiM - mulaiM) / (1000 * 60 * 60));
+      }
+      const totalHarga = computeCartTotalString(mediaDuration);
+
+      const newBooking = {
+        id: 'book_' + Date.now(),
+        tanggal: new Date().toLocaleDateString('id-ID', { dateStyle: 'medium' }),
+        nama: NamaLengkap,
+        media: AsalMediaKomunitas,
+        asrama: AsramaDepartemen,
+        hp: NoHPAktif,
+        alamat: Alamat,
+        alat: [...keranjang],
+        waktuAmbil: WaktuAmbil,
+        waktuKembali: WaktuKembali,
+        total: totalHarga,
+        kategori: 'Media',
+        extras,
+        status: 'Diproses',
+        denda: 0
+      };
+
+      bookingsList.push(newBooking);
+      localStorage.setItem('meta_hati_bookings', JSON.stringify(bookingsList));
+
+      keranjang.forEach(item => {
+        const parts = item.split(' - ');
+        const match = databaseAlat.find(a => a.nama === parts[0]);
+        if(match) match.status = 'Sedang Dipinjam';
+      });
+      localStorage.setItem('meta_hati_alat', JSON.stringify(databaseAlat));
+
+      Swal.fire({ icon: 'success', title: 'Booking Berhasil!', timer: 2500, showConfirmButton: false, background: '#0f172a', color: '#e2e8f0' })
+        .then(() => {
+          keranjang = [];
+          tampilkanKeranjang();
+          document.getElementById('penyewaMedia').reset();
+          document.getElementById('mediaTotalHarga').innerText = 'Rp0';
+          const md = document.getElementById('mediaDurationJam'); if (md) md.innerText = '0';
+          showSection('landing');
+          renderKatalog();
+          updateAdminStats();
+        });
+
+      // kirim ke Google Sheets (opsional)
+      const urlScript = 'https://script.google.com/macros/s/AKfycbxcJNP8xuyMPPdUe0QkYF2J3uUPxHkXW7IjKgH9NkbHFpbCguWE37dNTt1fHhIhSjzU/exec';
+      fetch(urlScript, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(newBooking) });
+    }
+
+    function decorationBooking() {
+      const NamaLengkap = document.getElementById('decorationNama').value;
+      const AsalMediaKomunitas = document.getElementById('decorationAsal').value;
+      const AsramaDepartemen = document.getElementById('decorationAsrama').value;
+      const NoHPAktif = document.getElementById('decorationWA').value;
+      const Alamat = document.getElementById('decorationAlamat').value;
+      const decorationWaktuAmbilDate = document.getElementById('decorationWaktuAmbilDate')?.value || '';
+      const decorationWaktuAmbilTime = document.getElementById('decorationWaktuAmbilTime')?.value || '';
+      const decorationWaktuKembaliDate = document.getElementById('decorationWaktuKembaliDate')?.value || '';
+      const decorationWaktuKembaliTime = document.getElementById('decorationWaktuKembaliTime')?.value || '';
+      const WaktuAmbil = decorationWaktuAmbilDate && decorationWaktuAmbilTime ? (decorationWaktuAmbilDate + 'T' + decorationWaktuAmbilTime) : '';
+      const WaktuKembali = decorationWaktuKembaliDate && decorationWaktuKembaliTime ? (decorationWaktuKembaliDate + 'T' + decorationWaktuKembaliTime) : '';
+      const extras = {
+        eventType: document.getElementById('decorationEventType')?.value || '',
+        areaSize: document.getElementById('decorationAreaSize')?.value || '',
+        needSetup: !!document.getElementById('decorationNeedSetup')?.checked
+      };
+      let decDuration = 0;
+      if (WaktuAmbil && WaktuKembali) {
+        const mulaiD = new Date(WaktuAmbil);
+        const selesaiD = new Date(WaktuKembali);
+        if (selesaiD > mulaiD) decDuration = Math.ceil(Math.abs(selesaiD - mulaiD) / (1000 * 60 * 60));
+      }
+      const totalHarga = computeCartTotalString(decDuration);
+
+      const newBooking = { id: 'book_' + Date.now(), tanggal: new Date().toLocaleDateString('id-ID', { dateStyle: 'medium' }), nama: NamaLengkap, media: AsalMediaKomunitas, asrama: AsramaDepartemen, hp: NoHPAktif, alamat: Alamat, alat: [...keranjang], waktuAmbil: WaktuAmbil, waktuKembali: WaktuKembali, total: totalHarga, kategori: 'Decoration', extras, status: 'Diproses', denda: 0 };
+      bookingsList.push(newBooking); localStorage.setItem('meta_hati_bookings', JSON.stringify(bookingsList));
+      keranjang.forEach(item => { const parts = item.split(' - '); const match = databaseAlat.find(a => a.nama === parts[0]); if(match) match.status = 'Sedang Dipinjam'; });
+      localStorage.setItem('meta_hati_alat', JSON.stringify(databaseAlat));
+      Swal.fire({ icon: 'success', title: 'Booking Decoration Berhasil!', timer: 2500, showConfirmButton: false, background: '#0f172a', color: '#e2e8f0' }).then(() => { keranjang = []; tampilkanKeranjang(); document.getElementById('penyewaDecoration').reset(); document.getElementById('decorationTotalHarga').innerText = 'Rp0'; const dd = document.getElementById('decorationDurationJam'); if (dd) dd.innerText = '0'; showSection('landing'); renderKatalog(); updateAdminStats(); });
+      const urlScript2 = 'https://script.google.com/macros/s/AKfycbxcJNP8xuyMPPdUe0QkYF2J3uUPxHkXW7IjKgH9NkbHFpbCguWE37dNTt1fHhIhSjzU/exec'; fetch(urlScript2, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(newBooking) });
+    }
+
+    function propertiBooking() {
+      const NamaLengkap = document.getElementById('propertiNama').value;
+      const AsalMediaKomunitas = document.getElementById('propertiAsal').value;
+      const AsramaDepartemen = document.getElementById('propertiAsrama').value;
+      const NoHPAktif = document.getElementById('propertiWA').value;
+      const Alamat = document.getElementById('propertiAlamat').value;
+      const propertiWaktuAmbilDate = document.getElementById('propertiWaktuAmbilDate')?.value || '';
+      const propertiWaktuAmbilTime = document.getElementById('propertiWaktuAmbilTime')?.value || '';
+      const propertiWaktuKembaliDate = document.getElementById('propertiWaktuKembaliDate')?.value || '';
+      const propertiWaktuKembaliTime = document.getElementById('propertiWaktuKembaliTime')?.value || '';
+      const WaktuAmbil = propertiWaktuAmbilDate && propertiWaktuAmbilTime ? (propertiWaktuAmbilDate + 'T' + propertiWaktuAmbilTime) : '';
+      const WaktuKembali = propertiWaktuKembaliDate && propertiWaktuKembaliTime ? (propertiWaktuKembaliDate + 'T' + propertiWaktuKembaliTime) : '';
+      const extras = { usage: document.getElementById('propertiUsage')?.value || '', count: document.getElementById('propertiCount')?.value || '', needDelivery: !!document.getElementById('propertiNeedDelivery')?.checked };
+      let propDuration = 0;
+      if (WaktuAmbil && WaktuKembali) {
+        const mulaiP = new Date(WaktuAmbil);
+        const selesaiP = new Date(WaktuKembali);
+        if (selesaiP > mulaiP) propDuration = Math.ceil(Math.abs(selesaiP - mulaiP) / (1000 * 60 * 60));
+      }
+      const totalHarga = computeCartTotalString(propDuration);
+      const newBooking = { id: 'book_' + Date.now(), tanggal: new Date().toLocaleDateString('id-ID', { dateStyle: 'medium' }), nama: NamaLengkap, media: AsalMediaKomunitas, asrama: AsramaDepartemen, hp: NoHPAktif, alamat: Alamat, alat: [...keranjang], waktuAmbil: WaktuAmbil, waktuKembali: WaktuKembali, total: totalHarga, kategori: 'Properti', extras, status: 'Diproses', denda: 0 };
+      bookingsList.push(newBooking); localStorage.setItem('meta_hati_bookings', JSON.stringify(bookingsList)); keranjang.forEach(item => { const parts = item.split(' - '); const match = databaseAlat.find(a => a.nama === parts[0]); if(match) match.status = 'Sedang Dipinjam'; }); localStorage.setItem('meta_hati_alat', JSON.stringify(databaseAlat)); Swal.fire({ icon: 'success', title: 'Booking Properti Berhasil!', timer: 2500, showConfirmButton: false, background: '#0f172a', color: '#e2e8f0' }).then(() => { keranjang = []; tampilkanKeranjang(); document.getElementById('penyewaProperti').reset(); document.getElementById('propertiTotalHarga').innerText = 'Rp0'; const pd = document.getElementById('propertiDurationJam'); if (pd) pd.innerText = '0'; document.getElementById('formSection').style.display = 'none'; document.getElementById('alatSection').style.display = 'none'; document.getElementById('landing').style.display = 'flex'; renderKatalog(); updateAdminStats(); });
+      const urlScript3 = 'https://script.google.com/macros/s/AKfycbxcJNP8xuyMPPdUe0QkYF2J3uUPxHkXW7IjKgH9NkbHFpbCguWE37dNTt1fHhIhSjzU/exec'; fetch(urlScript3, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(newBooking) });
+    }
+
+    function lainnyaBooking() {
+      const NamaLengkap = document.getElementById('lainnyaNama').value;
+      const AsalMediaKomunitas = document.getElementById('lainnyaAsal').value;
+      const AsramaDepartemen = document.getElementById('lainnyaAsrama').value;
+      const NoHPAktif = document.getElementById('lainnyaWA').value;
+      const Alamat = document.getElementById('lainnyaAlamat').value;
+      const lainnyaWaktuAmbilDate = document.getElementById('lainnyaWaktuAmbilDate')?.value || '';
+      const lainnyaWaktuAmbilTime = document.getElementById('lainnyaWaktuAmbilTime')?.value || '';
+      const lainnyaWaktuKembaliDate = document.getElementById('lainnyaWaktuKembaliDate')?.value || '';
+      const lainnyaWaktuKembaliTime = document.getElementById('lainnyaWaktuKembaliTime')?.value || '';
+      const WaktuAmbil = lainnyaWaktuAmbilDate && lainnyaWaktuAmbilTime ? (lainnyaWaktuAmbilDate + 'T' + lainnyaWaktuAmbilTime) : '';
+      const WaktuKembali = lainnyaWaktuKembaliDate && lainnyaWaktuKembaliTime ? (lainnyaWaktuKembaliDate + 'T' + lainnyaWaktuKembaliTime) : '';
+      const extras = { notes: document.getElementById('lainnyaNotes')?.value || '' };
+      let lainDuration = 0;
+      if (WaktuAmbil && WaktuKembali) {
+        const mulaiL = new Date(WaktuAmbil);
+        const selesaiL = new Date(WaktuKembali);
+        if (selesaiL > mulaiL) lainDuration = Math.ceil(Math.abs(selesaiL - mulaiL) / (1000 * 60 * 60));
+      }
+      const totalHarga = computeCartTotalString(lainDuration);
+      const newBooking = { id: 'book_' + Date.now(), tanggal: new Date().toLocaleDateString('id-ID', { dateStyle: 'medium' }), nama: NamaLengkap, media: AsalMediaKomunitas, asrama: AsramaDepartemen, hp: NoHPAktif, alamat: Alamat, alat: [...keranjang], waktuAmbil: WaktuAmbil, waktuKembali: WaktuKembali, total: totalHarga, kategori: 'Lainnya', extras, status: 'Diproses', denda: 0 };
+      bookingsList.push(newBooking); localStorage.setItem('meta_hati_bookings', JSON.stringify(bookingsList)); keranjang.forEach(item => { const parts = item.split(' - '); const match = databaseAlat.find(a => a.nama === parts[0]); if(match) match.status = 'Sedang Dipinjam'; }); localStorage.setItem('meta_hati_alat', JSON.stringify(databaseAlat)); Swal.fire({ icon: 'success', title: 'Booking Berhasil!', timer: 2500, showConfirmButton: false, background: '#0f172a', color: '#e2e8f0' }).then(() => { keranjang = []; tampilkanKeranjang(); document.getElementById('penyewaLainnya').reset(); document.getElementById('lainnyaTotalHarga').innerText = 'Rp0'; const ld = document.getElementById('lainnyaDurationJam'); if (ld) ld.innerText = '0'; document.getElementById('formSection').style.display = 'none'; document.getElementById('alatSection').style.display = 'none'; document.getElementById('landing').style.display = 'flex'; renderKatalog(); updateAdminStats(); });
+      const urlScript4 = 'https://script.google.com/macros/s/AKfycbxcJNP8xuyMPPdUe0QkYF2J3uUPxHkXW7IjKgH9NkbHFpbCguWE37dNTt1fHhIhSjzU/exec'; fetch(urlScript4, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(newBooking) });
     }
 
     // ================================= -->
@@ -1254,7 +1660,7 @@
       // DI SINI ADALAH TEMPAT MENGATUR SANDI ANDA
       // ==========================================
       const sandiOpsi1 = "massalammassalam";     // Sandi Utama (Master Admin)
-      const sandiOpsi2 = "cok";   // Sandi Staff (Piket Cadangan)
+      const sandiOpsi2 = "tantetantrum";   // Sandi Staff (Piket Cadangan)
 
       if (result.value === sandiOpsi1 || result.value === sandiOpsi2) {
         
@@ -1284,24 +1690,6 @@
           }
         }
       });
-      window.addEventListener("DOMContentLoaded", () => {
-
-  const params = new URLSearchParams(window.location.search);
-
-  const modeAdmin = params.get("admin");
-
-  if(modeAdmin === "true"){
-
-    // sembunyikan halaman penyewa
-    document.getElementById("landing").style.display = "none";
-    document.getElementById("alatSection").style.display = "none";
-    document.getElementById("formSection").style.display = "none";
-
-    // tampilkan portal admin
-    document.getElementById("portalAdmin").style.display = "block";
-  }
-
-});
     }
 
     function logoutAdmin() {
@@ -1722,10 +2110,6 @@
       });
     }
    
-
-    
-  
-  
   </script>
   
 </body>
